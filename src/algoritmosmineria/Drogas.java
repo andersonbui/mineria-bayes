@@ -5,6 +5,7 @@
  */
 package algoritmosmineria;
 
+import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.Naivayes;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +41,8 @@ public class Drogas extends javax.swing.JFrame {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
+        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {
             try {
@@ -50,8 +51,8 @@ public class Drogas extends javax.swing.JFrame {
                 arrfloader.setFile(file);
                 instancias = arrfloader.getDataSet();
 //            instancias.setClass(instancias.attribute("Sobrevivio"));
-//            instancias.setClass(instancias.attribute("Drug"));
-                instancias.setClass(instancias.attribute("play"));
+                instancias.setClass(instancias.attribute("Drug"));
+//                instancias.setClass(instancias.attribute("play"));
                 nv = new Naivayes();
                 nv.crearModelo(instancias);
 
@@ -71,10 +72,10 @@ public class Drogas extends javax.swing.JFrame {
                 }
 
 //            nv.evaluarInstancias(instancias);
-//                double[] probabilidades = nv.evaluarInstancia(instancias.instance(4));
-//                for (int i = 0; i < probabilidades.length; i++) {
-//                    System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
-//                }
+                double[] probabilidades = nv.evaluarInstancia(instancias.instance(4));
+                for (int i = 0; i < probabilidades.length; i++) {
+                    System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
+                }
             } catch (IOException ex) {
                 Logger.getLogger(Drogas.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -161,6 +162,13 @@ public class Drogas extends javax.swing.JFrame {
 
             String resultado = "";
             double valor;
+            Evaluacion eva = new Evaluacion(instancias);
+            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
+            
+            resultado += "Matriz de confucion: \n" + eva.matrizConfucion_string();
+            resultado += "\n\nrecall: \n" + eva.recall_string();
+            resultado += "fMeasure: \n" + eva.fMeasure_string();
+
             Instance instancia = (Instance) instancias.instance(0).copy();
             for (int i = 0; i < instancias.numAttributes(); i++) {
                 Attribute attActual = instancias.attribute(i);
@@ -174,6 +182,7 @@ public class Drogas extends javax.swing.JFrame {
                 }
             }
             double[] probabilidades = nv.evaluarInstancia(instancia);
+            resultado += "\n\nEVALUACION DE LA INSTANCIA";
             for (int i = 0; i < probabilidades.length; i++) {
                 resultado += "\nclase: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]);
             }

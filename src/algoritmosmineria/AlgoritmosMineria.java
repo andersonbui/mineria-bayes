@@ -6,7 +6,7 @@
 package algoritmosmineria;
 
 import algoritmosAgrupamiento.Naivayes;
-import algoritmosAgrupamiento.Validacion;
+import algoritmosAgrupamiento.Evaluacion;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,8 +26,8 @@ public class AlgoritmosMineria {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
+        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {
             System.out.println("nombre archivo:" + file.getAbsolutePath());
@@ -35,8 +35,8 @@ public class AlgoritmosMineria {
             arrfloader.setFile(file);
             Instances instancias = arrfloader.getDataSet();
 //            instancias.setClass(instancias.attribute("Sobrevivio"));
-//            instancias.setClass(instancias.attribute("Drug"));
-            instancias.setClass(instancias.attribute("play"));
+            instancias.setClass(instancias.attribute("Drug"));
+//            instancias.setClass(instancias.attribute("play"));
             Naivayes nv = new Naivayes();
             nv.crearModelo(instancias);
 
@@ -45,13 +45,18 @@ public class AlgoritmosMineria {
             for (int i = 0; i < probabilidades.length; i++) {
                 System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
             }
-            double[][] matProb = (new Validacion()).crearMatrizDeConfucion(nv, instancias);
-            for (double[] ds : matProb) {
+            Evaluacion eva = new Evaluacion(instancias);
+            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
+            System.out.println("recall: \n"+eva.recall_string());
+            System.out.println("fMeasure: \n"+eva.fMeasure_string());
+            for (int[] ds : matProb) {
                 System.out.println("[" + Arrays.toString(ds));
             }
             System.out.println("--");
-            matProb = (new Validacion()).crearMatrizDeConfucionValidacionCruzada(instancias, 3);
-            for (double[] ds : matProb) {
+            matProb = eva.crearMatrizDeConfucionValidacionCruzada(instancias, 3);
+            System.out.println("recall: \n"+eva.recall_string());
+            System.out.println("fMeasure: \n"+eva.fMeasure_string());
+            for (int[] ds : matProb) {
                 System.out.println("[" + Arrays.toString(ds));
             }
         }
