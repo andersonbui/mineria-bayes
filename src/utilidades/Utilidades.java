@@ -89,4 +89,10 @@ public class Utilidades {
 
         }
     }
+    
+    public static double probabilidad(double valor, double media, double desvEstandar) { //funcion de densidad de probabilidad normal
+        double exponente = Math.exp(-Math.pow(valor - media, 2) / (2 * Math.pow(desvEstandar, 2)));
+        return exponente / (Math.sqrt(2 * Math.PI) * desvEstandar);
+    }
+
 }

@@ -6,8 +6,10 @@
 package algoritmosmineria;
 
 import algoritmosAgrupamiento.Naivayes;
+import algoritmosAgrupamiento.Validacion;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 
@@ -24,15 +26,34 @@ public class AlgoritmosMineria {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
         File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {
             System.out.println("nombre archivo:" + file.getAbsolutePath());
             ArffLoader arrfloader = new ArffLoader();
             arrfloader.setFile(file);
-            Naivayes nv = new Naivayes();
             Instances instancias = arrfloader.getDataSet();
-            nv.ejecutar(instancias, instancias.attribute("play").index());
+//            instancias.setClass(instancias.attribute("Sobrevivio"));
+//            instancias.setClass(instancias.attribute("Drug"));
+            instancias.setClass(instancias.attribute("play"));
+            Naivayes nv = new Naivayes();
+            nv.crearModelo(instancias);
 
+//            nv.evaluarInstancias(instancias);
+            double[] probabilidades = nv.evaluarInstancia(instancias.instance(4));
+            for (int i = 0; i < probabilidades.length; i++) {
+                System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
+            }
+            double[][] matProb = (new Validacion()).crearMatrizDeConfucion(nv, instancias);
+            for (double[] ds : matProb) {
+                System.out.println("[" + Arrays.toString(ds));
+            }
+            System.out.println("--");
+            matProb = (new Validacion()).crearMatrizDeConfucionValidacionCruzada(instancias, 3);
+            for (double[] ds : matProb) {
+                System.out.println("[" + Arrays.toString(ds));
+            }
         }
 
     }
