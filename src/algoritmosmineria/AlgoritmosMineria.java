@@ -26,7 +26,8 @@ public class AlgoritmosMineria {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
+        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {

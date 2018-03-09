@@ -43,12 +43,11 @@ public class Naivayes {
     }
 
     /**
-     *
+     * 
      * @param instanciasOriginales
      */
     public void crearModelo(Instances instanciasOriginales) {
-        instancias = instanciasOriginales;
-        this.instancias = new Instances(instancias);
+        this.instancias = new Instances(instanciasOriginales);
         varClase = instancias.classAttribute();
 
         double sumaUnos;
@@ -85,19 +84,23 @@ public class Naivayes {
         }
 
         // remueve instancias sin variable de clase
-        instancias.deleteWithMissingClass();
+//        instancias.deleteWithMissingClass();
         // probabilidad de variable de clase
         if (varClase.isNominal()) {
             probVarClase = new double[varClase.numValues()];
+            //conteo
             for (int i = 0; i < instancias.numInstances(); i++) {
                 int val = (int) instancias.instance(i).value(varClase);
                 probVarClase[val] += 1;
             }
+            // conteo_atributo[i]/total_atributos
             for (int i = 0; i < probVarClase.length; i++) {
                 probVarClase[i] /= instancias.numInstances();
             }
             System.out.println("probabilidad var clase:[" + varClase.toString() + "]" + Arrays.toString(probVarClase));
         }
+        int[] vector;
+        
         //calculo de probabilidades condicionadas con respecto ala variable de clase
         vectorMatProbCondicionales = new MatProbabilidad[instancias.numAttributes() - 1];
         double[] vectorSumaValores;
@@ -213,13 +216,13 @@ public class Naivayes {
         for (int j = 0; j < varClase.numValues(); j++) {
             probabilidadesVarClase[j] = (probabilidadesVarClase[j] / suma) * 100;
             valorVarClase = varClase.value(j);
-            System.out.println("instancia: " + instanciaActual.toString()
+            System.out.println("["+var+++"]instancia: " + instanciaActual.toString()
                     + "; probabiliad[" + valorVarClase + "]: "
                     + String.format("%.2f", probabilidadesVarClase[j]) + "%");
         }
         return probabilidadesVarClase;
     }
-
+int var =0;
     private double evaluarInstancia(Instances instancias, Instance instanciaActual, int valAttPrincipal) {
         double probabilidadTotal = 1;
         for (int j = 0; j < instancias.numAttributes(); j++) {

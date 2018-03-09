@@ -20,7 +20,7 @@ public class Evaluacion {
 
     int[][] matrizConfusion;
     private final Instances instancias;
-
+    Naivayes nv;
     /**
      *
      * @param instancias
@@ -54,8 +54,8 @@ public class Evaluacion {
         return matConfusion;
     }
 
-    public int[][] crearMatrizDeConfucionValidacionCruzada(Instances instancias, int numCarpetas) {
-        Naivayes nv = new Naivayes();
+    public int[][] crearMatrizDeConfucionValidacionCruzada(final Instances instancias, int numCarpetas) {
+        nv = new Naivayes();
         Instances[] vectInstancias;
         Cruzados cruzados = datosCruzados(instancias, numCarpetas);
         int[][] matConfucionTotal = null;
@@ -78,7 +78,7 @@ public class Evaluacion {
         Attribute varClase = instancias.classAttribute();
         String cadena = "";
         for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += "[" + i + "]" + Arrays.toString(matrizConfusion[i]) +"->"+varClase.value(i)+ "\n";
+            cadena += "[" + i + "]" + Arrays.toString(matrizConfusion[i]) + "->" + varClase.value(i) + "\n";
         }
         return cadena;
 
@@ -173,22 +173,20 @@ public class Evaluacion {
      * @param numcarpetas numero de carpetas dentro del conjunto resultado
      * @return
      */
-    public Cruzados datosCruzados(Instances instancias, int numcarpetas) {
+    public Cruzados datosCruzados(final Instances instancias, int numcarpetas) {
         Attribute varClase = instancias.classAttribute();
         Cruzados cruzados = new Cruzados();
         Instances[] vectCarpetaInstancias = new Instances[numcarpetas];
         //alojar espacio para las carpetas
         for (int i = 0; i < vectCarpetaInstancias.length; i++) {
-            vectCarpetaInstancias[i] = new Instances(instancias, 0, 0);
+            vectCarpetaInstancias[i] = new Instances(instancias, 0);
             cruzados.add(vectCarpetaInstancias[i]);
         }
 
-        int carpeta = 0;
         instancias.sort(varClase);
         for (int i = 0; i < instancias.numInstances(); i++) {
             Instance instanciaActual = instancias.instance(i);
-            vectCarpetaInstancias[carpeta % vectCarpetaInstancias.length].add(instanciaActual);
-            carpeta++;
+            vectCarpetaInstancias[i % vectCarpetaInstancias.length].add(instanciaActual);
         }
 
         return cruzados;
@@ -254,4 +252,9 @@ public class Evaluacion {
         }
 
     }
+
+    public Naivayes getNaivayes() {
+        return nv;
+    }
+    
 }
