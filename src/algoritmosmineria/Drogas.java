@@ -232,6 +232,7 @@ public class Drogas extends javax.swing.JFrame {
             resultado += "Matriz de confucion: \n" + eva.matrizConfucion_string();
             resultado += "\n\nrecall: \n" + eva.recall_string();
             resultado += "fMeasure: \n" + eva.fMeasure_string();
+            resultado += "precision: \n" + eva.precision_string();
 
             Instance instancia = (Instance) instancias.instance(0).copy();
             for (int i = 0; i < instancias.numAttributes(); i++) {

@@ -43,7 +43,7 @@ public class Naivayes {
     }
 
     /**
-     * 
+     *
      * @param instanciasOriginales
      */
     public void crearModelo(Instances instanciasOriginales) {
@@ -100,7 +100,7 @@ public class Naivayes {
             System.out.println("probabilidad var clase:[" + varClase.toString() + "]" + Arrays.toString(probVarClase));
         }
         int[] vector;
-        
+
         //calculo de probabilidades condicionadas con respecto ala variable de clase
         vectorMatProbCondicionales = new MatProbabilidad[instancias.numAttributes() - 1];
         double[] vectorSumaValores;
@@ -132,7 +132,8 @@ public class Naivayes {
                     System.out.println("atributo: " + atributoActual.name());
                     //suma total por agrupado por atributo principal
                     for (int i = 0; i < instancias.numInstances(); i++) {
-                        double valSeg = instancias.instance(i).value(atributoActual);
+                        double valSeg = getValor(instancias.instance(i), atributoActual);
+//                        double valSeg = instancias.instance(i).value(atributoActual);
                         int valPrin = (int) instancias.instance(i).value(varClase);
                         contador[valPrin][1] += valSeg;
                         vectorSumaValores[valPrin]++;
@@ -144,7 +145,7 @@ public class Naivayes {
                     }
                     // calculo de desviacion estandar
                     for (int k = 0; k < instancias.numInstances(); k++) {
-                        double valSeg = instancias.instance(k).value(atributoActual);
+                        double valSeg = getValor(instancias.instance(k), atributoActual);
                         int valPrin = (int) instancias.instance(k).value(varClase);
                         // sumatoria de los cuadrados de la diferencia entre cada elemento y el promedio
                         contador[valPrin][0] += Math.pow(valSeg - contador[valPrin][1], 2);
@@ -216,13 +217,14 @@ public class Naivayes {
         for (int j = 0; j < varClase.numValues(); j++) {
             probabilidadesVarClase[j] = (probabilidadesVarClase[j] / suma) * 100;
             valorVarClase = varClase.value(j);
-            System.out.println("["+var+++"]instancia: " + instanciaActual.toString()
+            System.out.println("[" + var++ + "]instancia: " + instanciaActual.toString()
                     + "; probabiliad[" + valorVarClase + "]: "
                     + String.format("%.2f", probabilidadesVarClase[j]) + "%");
         }
         return probabilidadesVarClase;
     }
-int var =0;
+    int var = 0;
+
     private double evaluarInstancia(Instances instancias, Instance instanciaActual, int valAttPrincipal) {
         double probabilidadTotal = 1;
         for (int j = 0; j < instancias.numAttributes(); j++) {
@@ -237,6 +239,7 @@ int var =0;
                     // optener probabilidad del valor del atributoActual y atributoPrincipal
                     probabilidadTotal *= matP.get(valAttPrincipal, col);
                 } else {
+//                    double valor = getValor(instanciaActual, atributoActual);
                     double valor = instanciaActual.value(atributoActual);
                     // obtener promedio desde la posicion 1
                     double media = matP.get(valAttPrincipal, 1);
@@ -252,4 +255,10 @@ int var =0;
         return probabilidadTotal;
     }
 
+    public double getValor(Instance instancia, Attribute atributo) {
+        double valor;
+        valor = instancia.value(atributo) / vectorPresicion[atributo.index()];
+        valor = Math.round(valor) * vectorPresicion[atributo.index()];
+        return valor;
+    }
 }

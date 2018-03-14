@@ -21,6 +21,7 @@ public class Evaluacion {
     int[][] matrizConfusion;
     private final Instances instancias;
     Naivayes nv;
+
     /**
      *
      * @param instancias
@@ -29,6 +30,12 @@ public class Evaluacion {
         this.instancias = instancias;
     }
 
+    /**
+     *
+     * @param modelo
+     * @param instancias
+     * @return
+     */
     public int[][] crearMatrizDeConfucion(Naivayes modelo, Instances instancias) {
         double[][] resultado = modelo.evaluarInstancias(instancias);
         Attribute varClase = instancias.classAttribute();
@@ -41,6 +48,7 @@ public class Evaluacion {
         for (int i = 0; i < instancias.numInstances(); i++) {
             Instance instancia = instancias.instance(i);
             valMayor = Double.NEGATIVE_INFINITY;
+            //obtener mayor porcentaje
             for (int j = 0; j < resultado[i].length; j++) {
                 if (valMayor < resultado[i][j]) {
                     posMayor = j;
@@ -84,15 +92,6 @@ public class Evaluacion {
 
     }
 
-    public String recall_string() {
-        Attribute varClase = instancias.classAttribute();
-        String cadena = "";
-        for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += varClase.value(i) + ": " + recall(i) + "\n";
-        }
-        return cadena;
-    }
-
     /**
      * calcula los verdaderos positivos con respecto a una clase en particular
      * (indice clase)
@@ -127,6 +126,33 @@ public class Evaluacion {
         return cadena;
     }
 
+    public String recall_string() {
+        Attribute varClase = instancias.classAttribute();
+        String cadena = "";
+        for (int i = 0; i < varClase.numValues(); i++) {
+            cadena += varClase.value(i) + ": " + recall(i) + "\n";
+        }
+        return cadena;
+    }
+
+    public String precision_string() {
+        Attribute varClase = instancias.classAttribute();
+        String cadena = "";
+        for (int i = 0; i < varClase.numValues(); i++) {
+            cadena += varClase.value(i) + ": " + precision(i) + "\n";
+        }
+        return cadena;
+    }
+
+    private String to_string() {
+        Attribute varClase = instancias.classAttribute();
+        String cadena = "";
+        for (int i = 0; i < varClase.numValues(); i++) {
+            cadena += varClase.value(i) + ": " + recall(i) + "\n";
+        }
+        return cadena;
+    }
+
     /**
      *
      * @param indiceClase
@@ -134,15 +160,15 @@ public class Evaluacion {
      */
     public double fMeasure(int indiceClase) {
         double recall = recall(indiceClase);
-        double presicion = presicion(indiceClase);
-        if (recall + presicion == 0) {
+        double precision = precision(indiceClase);
+        if (recall + precision == 0) {
             return 0;
         }
-        return 2 * recall * presicion / (recall + presicion);
+        return 2 * recall * precision / (recall + precision);
     }
 
     /**
-     * Calcula la presicion con respecto a una clase en particular (indice
+     * Calcula la precision con respecto a una clase en particular (indice
      * clase)
      * <pre>
      * correctly classified positives
@@ -153,7 +179,7 @@ public class Evaluacion {
      * @param indice
      * @return
      */
-    public double presicion(int indice) {
+    public double precision(int indice) {
         double correctos = 0;
         double sumaTotal = 0;
         for (int k = 0; k < matrizConfusion.length; k++) {
@@ -256,5 +282,5 @@ public class Evaluacion {
     public Naivayes getNaivayes() {
         return nv;
     }
-    
+
 }
