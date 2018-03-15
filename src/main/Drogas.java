@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package algoritmosmineria;
+package main;
 
 import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.Naivayes;
