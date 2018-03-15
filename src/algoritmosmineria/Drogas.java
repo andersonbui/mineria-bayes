@@ -210,6 +210,7 @@ public class Drogas extends javax.swing.JFrame {
     private void botonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActionPerformed
         try {
             nv = new Naivayes();
+            Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
             Evaluacion eva = new Evaluacion(instancias);
             double valorTemp;
@@ -239,13 +240,15 @@ public class Drogas extends javax.swing.JFrame {
             Instance instancia = (Instance) instancias.instance(0).copy();
             for (int i = 0; i < instancias.numAttributes(); i++) {
                 Attribute attActual = instancias.attribute(i);
-                if (attActual.isNominal()) {
-                    JComboBox jcb = (JComboBox) listaComponentes.get(i);
-                    instancia.setValue(i, (String) jcb.getSelectedItem());
-                } else {
-                    JTextField jtext = (JTextField) listaComponentes.get(i);
-                    valorTemp = Double.parseDouble(jtext.getText());
-                    instancia.setValue(i, valorTemp);
+                if (i != atributoDeClase.index()) {
+                    if (attActual.isNominal()) {
+                        JComboBox jcb = (JComboBox) listaComponentes.get(i);
+                        instancia.setValue(i, (String) jcb.getSelectedItem());
+                    } else {
+                        JTextField jtext = (JTextField) listaComponentes.get(i);
+                        valorTemp = Double.parseDouble(jtext.getText());
+                        instancia.setValue(i, valorTemp);
+                    }
                 }
             }
             System.out.println("instancia: " + instancia);

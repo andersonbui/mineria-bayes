@@ -19,6 +19,8 @@ import weka.core.Instances;
 public class Evaluacion {
 
     int[][] matrizConfusion;
+    int[] sumaReales;
+    int[] sumaPredichos;
     private final Instances instancias;
     Naivayes nv;
 
@@ -39,7 +41,9 @@ public class Evaluacion {
     public int[][] crearMatrizDeConfucion(Naivayes modelo, Instances instancias) {
         double[][] resultado = modelo.evaluarInstancias(instancias);
         Attribute varClase = instancias.classAttribute();
-        int[][] matConfusion = new int[varClase.numValues()][varClase.numValues()];
+        matrizConfusion = new int[varClase.numValues()][varClase.numValues()];
+        sumaPredichos = new int[varClase.numValues()];
+        sumaReales = new int[varClase.numValues()];
 
         double valMayor;
         int valReal;
@@ -56,10 +60,11 @@ public class Evaluacion {
                 }
             }
             valReal = (int) instancia.value(varClase);
-            matConfusion[valReal][posMayor]++;
+            matrizConfusion[valReal][posMayor]++;
+            sumaReales[valReal]++;
+            sumaPredichos[posMayor]++;
         }
-        this.matrizConfusion = matConfusion;
-        return matConfusion;
+        return matrizConfusion;
     }
 
     public int[][] crearMatrizDeConfucionValidacionCruzada(final Instances instancias, int numCarpetas) {
@@ -120,27 +125,48 @@ public class Evaluacion {
     public String fMeasure_string() {
         Attribute varClase = instancias.classAttribute();
         String cadena = "";
+        double sumatoria = 0;
+        double totalReales = 0;
+        double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += varClase.value(i) + ": " + fMeasure(i) + "\n";
+            precision = fMeasure(i);
+            cadena += varClase.value(i) + ": " + precision + "\n";
+            sumatoria += sumaReales[i] * precision;
+            totalReales += sumaReales[i];
         }
+        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
         return cadena;
     }
 
     public String recall_string() {
         Attribute varClase = instancias.classAttribute();
         String cadena = "";
+        double sumatoria = 0;
+        double totalReales = 0;
+        double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += varClase.value(i) + ": " + recall(i) + "\n";
+            precision = recall(i);
+            cadena += varClase.value(i) + ": " + precision + "\n";
+            sumatoria += sumaReales[i] * precision;
+            totalReales += sumaReales[i];
         }
+        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
         return cadena;
     }
 
     public String precision_string() {
         Attribute varClase = instancias.classAttribute();
         String cadena = "";
+        double sumatoria = 0;
+        double totalReales = 0;
+        double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += varClase.value(i) + ": " + precision(i) + "\n";
+            precision = precision(i);
+            cadena += varClase.value(i) + ": " + precision + "\n";
+            sumatoria += sumaReales[i] * precision;
+            totalReales += sumaReales[i];
         }
+        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
         return cadena;
     }
 
@@ -276,9 +302,10 @@ public class Evaluacion {
             }
             return new Instances[]{instancias1, listaInstancias.get(indice)};
         }
-
     }
 
+//    private cl
+    
     public Naivayes getNaivayes() {
         return nv;
     }
