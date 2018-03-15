@@ -122,7 +122,7 @@ public class Naivayes {
                         for (int l = 0; l < matProb[i].length; l++) {
                             matProb[i][l] = (matProb[i][l] + 1) / (vectorSumaValores[i] + atributoActual.numValues());
                         }
-                        System.out.println("contador:" + Arrays.toString(matProb[i]));
+                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
 
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(matProb);
@@ -154,7 +154,7 @@ public class Naivayes {
                     for (int i = 0; i < vectorSumaValores.length; i++) {
                         // raiz del cociente, de la sumatoria entre numero de elementos
                         contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i] - 1));
-                        System.out.println("contador:" + Arrays.toString(contador[i]));
+                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(contador[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(contador);
                 }
@@ -190,7 +190,7 @@ public class Naivayes {
         for (int i = 0; i < instancias.numInstances(); i++) {
             Instance instanciaActual = instancias.instance(i);
             probabilidadesVarClase[i] = evaluarInstancia(instanciaActual);
-            System.out.println("");
+//            System.out.println("");
         }
         return probabilidadesVarClase;
     }
@@ -217,9 +217,9 @@ public class Naivayes {
         for (int j = 0; j < varClase.numValues(); j++) {
             probabilidadesVarClase[j] = (probabilidadesVarClase[j] / suma) * 100;
             valorVarClase = varClase.value(j);
-            System.out.println("[" + var++ + "]instancia: " + instanciaActual.toString()
-                    + "; probabiliad[" + valorVarClase + "]: "
-                    + String.format("%.2f", probabilidadesVarClase[j]) + "%");
+//            System.out.println("[" + var++ + "]instancia: " + instanciaActual.toString()
+//                    + "; probabiliad[" + valorVarClase + "]: "
+//                    + String.format("%.2f", probabilidadesVarClase[j]) + "%");
         }
         return probabilidadesVarClase;
     }

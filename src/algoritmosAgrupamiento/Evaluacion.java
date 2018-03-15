@@ -123,62 +123,56 @@ public class Evaluacion {
     }
 
     public String fMeasure_string() {
-        Attribute varClase = instancias.classAttribute();
-        String cadena = "";
-        double sumatoria = 0;
-        double totalReales = 0;
-        double precision;
-        for (int i = 0; i < varClase.numValues(); i++) {
-            precision = fMeasure(i);
-            cadena += varClase.value(i) + ": " + precision + "\n";
-            sumatoria += sumaReales[i] * precision;
-            totalReales += sumaReales[i];
-        }
-        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
-        return cadena;
+        return generico_string(new Funcion() {
+            @Override
+            public double ejecutar(int i) {
+                return fMeasure(i);
+            }
+        });
     }
 
     public String recall_string() {
-        Attribute varClase = instancias.classAttribute();
-        String cadena = "";
-        double sumatoria = 0;
-        double totalReales = 0;
-        double precision;
-        for (int i = 0; i < varClase.numValues(); i++) {
-            precision = recall(i);
-            cadena += varClase.value(i) + ": " + precision + "\n";
-            sumatoria += sumaReales[i] * precision;
-            totalReales += sumaReales[i];
-        }
-        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
-        return cadena;
+        return generico_string(new Funcion() {
+            @Override
+            public double ejecutar(int i) {
+                return recall(i);
+            }
+        });
     }
 
     public String precision_string() {
+        return generico_string(new Funcion() {
+            @Override
+            public double ejecutar(int i) {
+                return precision(i);
+            }
+        });
+    }
+
+    public String generico_string(Funcion funcion) {
         Attribute varClase = instancias.classAttribute();
         String cadena = "";
         double sumatoria = 0;
         double totalReales = 0;
         double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
-            precision = precision(i);
-            cadena += varClase.value(i) + ": " + precision + "\n";
+            precision = funcion.ejecutar(i);
+            cadena += varClase.value(i) + ": " + String.format("%.3f", precision) + "\n";
             sumatoria += sumaReales[i] * precision;
             totalReales += sumaReales[i];
         }
-        cadena += "Weighted Avg: " + (sumatoria / totalReales) + "\n";
+        cadena += "Weighted Avg: " + String.format("%.3f", (sumatoria / totalReales)) + "\n\n";
         return cadena;
     }
 
-    private String to_string() {
-        Attribute varClase = instancias.classAttribute();
-        String cadena = "";
-        for (int i = 0; i < varClase.numValues(); i++) {
-            cadena += varClase.value(i) + ": " + recall(i) + "\n";
-        }
-        return cadena;
-    }
-
+//    private String to_string() {
+//        Attribute varClase = instancias.classAttribute();
+//        String cadena = "";
+//        for (int i = 0; i < varClase.numValues(); i++) {
+//            cadena += varClase.value(i) + ": " + recall(i) + "\n";
+//        }
+//        return cadena;
+//    }
     /**
      *
      * @param indiceClase
@@ -304,8 +298,11 @@ public class Evaluacion {
         }
     }
 
-//    private cl
-    
+    public abstract class Funcion {
+
+        public abstract double ejecutar(int i);
+    }
+
     public Naivayes getNaivayes() {
         return nv;
     }
