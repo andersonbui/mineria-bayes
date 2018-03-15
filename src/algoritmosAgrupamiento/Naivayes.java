@@ -250,7 +250,6 @@ public class Naivayes {
                     probabilidadTotal *= probaAtrib;
                 }
             }
-
         }
         return probabilidadTotal;
     }

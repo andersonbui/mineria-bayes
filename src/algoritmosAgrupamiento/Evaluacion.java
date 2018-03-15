@@ -207,7 +207,6 @@ public class Evaluacion {
                 correctos += matrizConfusion[k][indice];
             }
             sumaTotal += matrizConfusion[k][indice];
-
         }
         return correctos / sumaTotal;
     }
