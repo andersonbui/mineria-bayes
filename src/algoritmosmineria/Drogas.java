@@ -61,14 +61,17 @@ public class Drogas extends javax.swing.JFrame {
                 for (int i = 0; i < instancias.numAttributes(); i++) {
                     Attribute attActual = instancias.attribute(i);
                     String titulo = attActual.name();
-                    if (attActual.isNominal()) {
-                        String[] vectorValAtt = new String[attActual.numValues()];
-                        for (int j = 0; j < attActual.numValues(); j++) {
-                            vectorValAtt[j] = attActual.value(j);
+
+                    if (attActual.index() != atributoDeClase.index()) {
+                        if (attActual.isNominal()) {
+                            String[] vectorValAtt = new String[attActual.numValues()];
+                            for (int j = 0; j < attActual.numValues(); j++) {
+                                vectorValAtt[j] = attActual.value(j);
+                            }
+                            addComboText(vectorValAtt, titulo);
+                        } else {
+                            addCampoText(titulo);
                         }
-                        addComboText(vectorValAtt, titulo);
-                    } else {
-                        addCampoText(titulo);
                     }
                 }
             } catch (IOException ex) {
@@ -206,7 +209,6 @@ public class Drogas extends javax.swing.JFrame {
 
     private void botonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActionPerformed
         try {
-
             nv = new Naivayes();
             String resultado = "";
             Evaluacion eva = new Evaluacion(instancias);
