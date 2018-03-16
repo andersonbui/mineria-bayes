@@ -8,7 +8,7 @@ package algoritmosAgrupamiento;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import utilidades.Utilidades;
+import utilidades.Util;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -78,7 +78,7 @@ public class Naivayes {
                 vectorPresicion[j] = sumaValores / sumaUnos;
             }
             System.out.println("sum valores[" + j + "]: " + sumaValores);
-            System.out.println("vector presicion[" + j + "]: " + vectorPresicion[j]);
+            System.out.println("vector presicion[" + j + "]: " + Util.formatearDouble(vectorPresicion[j]));
             j++;
         }
 
@@ -96,9 +96,8 @@ public class Naivayes {
             for (int i = 0; i < probVarClase.length; i++) {
                 probVarClase[i] /= instancias.numInstances();
             }
-            System.out.println("probabilidad var clase:[" + varClase.toString() + "]" + Arrays.toString(probVarClase));
+            System.out.println("probabilidad var clase:(" + varClase.toString() + ")\n[" + Util.imprimirVectorDouble(probVarClase) + "]");
         }
-        int[] vector;
 
         //calculo de probabilidades condicionadas con respecto ala variable de clase
         vectorMatProbCondicionales = new MatProbabilidad[instancias.numAttributes() - 1];
@@ -118,11 +117,12 @@ public class Naivayes {
                         vectorSumaValores[valPrin]++;
                     }
                     for (int i = 0; i < matProb.length; i++) {
+//                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
                         for (int l = 0; l < matProb[i].length; l++) {
                             matProb[i][l] = (matProb[i][l] + 1) / (vectorSumaValores[i] + atributoActual.numValues());
+                            
                         }
-                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
-
+                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(matProb[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(matProb);
                 } else if (atributoActual.isNumeric()) {
@@ -153,7 +153,7 @@ public class Naivayes {
                     for (int i = 0; i < vectorSumaValores.length; i++) {
                         // raiz del cociente, de la sumatoria entre numero de elementos
                         contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i] - 1));
-                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(contador[i]));
+                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(contador);
                 }
@@ -245,7 +245,7 @@ public class Naivayes {
                     // obtener desviacion desde la posicion 1
                     double desvicacion = matP.get(valAttPrincipal, 0);
                     // probabilidad del valor del atributo actual
-                    double probaAtrib = Utilidades.probabilidad(valor, media, desvicacion);
+                    double probaAtrib = Util.probabilidad(valor, media, desvicacion);
                     probabilidadTotal *= probaAtrib;
                 }
             }

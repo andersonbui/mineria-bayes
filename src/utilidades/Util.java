@@ -16,17 +16,29 @@
  */
 package utilidades;
 
-import java.util.List;
-
 /**
  *
  * @author debian
  */
-public class Utilidades {
+public class Util {
+
+    public static String formato = "%.3f";
 
     public static double probabilidad(double valor, double media, double desvEstandar) { //funcion de densidad de probabilidad normal
         double exponente = Math.exp(-Math.pow(valor - media, 2) / (2 * Math.pow(desvEstandar, 2)));
         return exponente / (Math.sqrt(2 * Math.PI) * desvEstandar);
+    }
+
+    public static String formatearDouble(double d) {
+        return String.format("%.3f", d);
+    }
+
+    public static String imprimirVectorDouble(double[] probVarClase) {
+        StringBuilder cadena = new StringBuilder();
+        for (double d : probVarClase) {
+            cadena.append(String.format(formato+" ", d));
+        }
+        return cadena.toString();
     }
 
 }
