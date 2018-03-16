@@ -22,7 +22,7 @@ package utilidades;
  */
 public class Util {
 
-    public static String formato = "%.3f";
+    public static String formato = "%.5f";
 
     public static double probabilidad(double valor, double media, double desvEstandar) { //funcion de densidad de probabilidad normal
         double exponente = Math.exp(-Math.pow(valor - media, 2) / (2 * Math.pow(desvEstandar, 2)));
@@ -30,7 +30,7 @@ public class Util {
     }
 
     public static String formatearDouble(double d) {
-        return String.format("%.3f", d);
+        return String.format(formato, d);
     }
 
     public static String imprimirVectorDouble(double[] probVarClase) {

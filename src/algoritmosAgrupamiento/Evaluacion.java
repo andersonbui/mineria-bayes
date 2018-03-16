@@ -157,11 +157,11 @@ public class Evaluacion {
         double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
             precision = funcion.ejecutar(i);
-            cadena += varClase.value(i) + ": " + String.format("%.3f", precision) + "\n";
+            cadena += varClase.value(i) + ": " + String.format("%.5f", precision) + "\n";
             sumatoria += sumaReales[i] * precision;
             totalReales += sumaReales[i];
         }
-        cadena += "Weighted Avg: " + String.format("%.3f", (sumatoria / totalReales)) + "\n\n";
+        cadena += "Weighted Avg: " + String.format("%.5f", (sumatoria / totalReales)) + "\n\n";
         return cadena;
     }
 

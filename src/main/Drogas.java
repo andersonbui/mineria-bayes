@@ -38,7 +38,7 @@ public class Drogas extends javax.swing.JFrame {
     public Drogas() {
         initComponents();
         txtNumCarpetas.setEnabled(false);
-        btnEvaluar.setEnabled(false);
+//        btnEvaluar.setEnabled(false);
         rbtnConjuntoReferencia.setSelected(true);
         BuscarArchivo ba = new BuscarArchivo();
 
@@ -228,7 +228,6 @@ public class Drogas extends javax.swing.JFrame {
             nv = new Naivayes();
             Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
-            Evaluacion eva = new Evaluacion(instancias);
             double valorTemp;
 //            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
             nv.crearModelo(instancias);
@@ -250,7 +249,7 @@ public class Drogas extends javax.swing.JFrame {
             }
             System.out.println("instancia: " + instancia);
             double[] probabilidades = nv.evaluarInstancia(instancia);
-            resultado += "\n\nEVALUACION DE LA INSTANCIA";
+            resultado += "EVALUACION DE LA INSTANCIA";
             for (int i = 0; i < probabilidades.length; i++) {
                 resultado += "\nclase: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]);
             }
@@ -274,7 +273,6 @@ public class Drogas extends javax.swing.JFrame {
             Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
             Evaluacion eva = new Evaluacion(instancias);
-            double valorTemp;
 //            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
             int numCarpetas;
             boolean pruebaValCruzada = rbtnValidacionCruzada.isSelected();
@@ -308,7 +306,7 @@ public class Drogas extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public  void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -109,7 +109,13 @@ public class Naivayes {
                 if (atributoActual.isNominal()) {
                     vectorSumaValores = new double[varClase.numValues()];
                     double[][] matProb = new double[varClase.numValues()][atributoActual.numValues()];
+                    for (int i = 0; i < matProb.length; i++) {
+                        for (int k = 0; k < matProb[i].length; k++) {
+                            matProb[i][k] = 0;
+                        }
+                    }
                     System.out.println("atributo: " + atributoActual.name());
+                    //conteo 
                     for (int i = 0; i < instancias.numInstances(); i++) {
                         int valSeg = (int) instancias.instance(i).value(atributoActual);
                         int valPrin = (int) instancias.instance(i).value(varClase);
@@ -117,12 +123,12 @@ public class Naivayes {
                         vectorSumaValores[valPrin]++;
                     }
                     for (int i = 0; i < matProb.length; i++) {
-//                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
+                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
                         for (int l = 0; l < matProb[i].length; l++) {
                             matProb[i][l] = (matProb[i][l] + 1) / (vectorSumaValores[i] + atributoActual.numValues());
-                            
+
                         }
-                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(matProb[i]));
+//                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(matProb[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(matProb);
                 } else if (atributoActual.isNumeric()) {
@@ -152,7 +158,7 @@ public class Naivayes {
                     //completar calculo de desviacion
                     for (int i = 0; i < vectorSumaValores.length; i++) {
                         // raiz del cociente, de la sumatoria entre numero de elementos
-                        contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i] - 1));
+                        contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i]));
                         System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(contador);
@@ -237,6 +243,7 @@ public class Naivayes {
                     int col = (int) instanciaActual.value(atributoActual);
                     // optener probabilidad del valor del atributoActual y atributoPrincipal
                     probabilidadTotal *= matP.get(valAttPrincipal, col);
+//                    System.out.println("prob: "+matP.get(valAttPrincipal, col));
                 } else {
 //                    double valor = getValor(instanciaActual, atributoActual);
                     double valor = instanciaActual.value(atributoActual);
@@ -246,9 +253,11 @@ public class Naivayes {
                     double desvicacion = matP.get(valAttPrincipal, 0);
                     // probabilidad del valor del atributo actual
                     double probaAtrib = Util.probabilidad(valor, media, desvicacion);
+//                    System.out.println("prob: "+probaAtrib);
                     probabilidadTotal *= probaAtrib;
                 }
             }
+//            System.out.println("");
         }
         return probabilidadTotal;
     }
