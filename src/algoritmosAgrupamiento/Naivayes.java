@@ -34,7 +34,6 @@ public class Naivayes {
     }
 
     List<Attribute> listaAtributos() {
-
         List listAtributos = new ArrayList();
         for (int i = 0; i < instancias.numAttributes(); i++) {
             listAtributos.add(instancias.attribute(i));
