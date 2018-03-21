@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package algoritmosmineria;
 
 import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.Naivayes;
@@ -38,9 +38,8 @@ public class Drogas extends javax.swing.JFrame {
     public Drogas() {
         initComponents();
         txtNumCarpetas.setEnabled(false);
-//        btnEvaluar.setEnabled(false);
         rbtnConjuntoReferencia.setSelected(true);
-        BuscarArchivo ba = new BuscarArchivo();
+//        BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
         File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
@@ -62,17 +61,14 @@ public class Drogas extends javax.swing.JFrame {
                 for (int i = 0; i < instancias.numAttributes(); i++) {
                     Attribute attActual = instancias.attribute(i);
                     String titulo = attActual.name();
-
-                    if (attActual.index() != atributoDeClase.index()) {
-                        if (attActual.isNominal()) {
-                            String[] vectorValAtt = new String[attActual.numValues()];
-                            for (int j = 0; j < attActual.numValues(); j++) {
-                                vectorValAtt[j] = attActual.value(j);
-                            }
-                            addComboText(vectorValAtt, titulo);
-                        } else {
-                            addCampoText(titulo);
+                    if (attActual.isNominal()) {
+                        String[] vectorValAtt = new String[attActual.numValues()];
+                        for (int j = 0; j < attActual.numValues(); j++) {
+                            vectorValAtt[j] = attActual.value(j);
                         }
+                        addComboText(vectorValAtt, titulo);
+                    } else {
+                        addCampoText(titulo);
                     }
                 }
             } catch (IOException ex) {
@@ -110,7 +106,7 @@ public class Drogas extends javax.swing.JFrame {
 
         btngPrueba = new javax.swing.ButtonGroup();
         jPanel5 = new javax.swing.JPanel();
-        btnEvaluar = new javax.swing.JButton();
+        boton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtPanelPrincipal = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -119,17 +115,16 @@ public class Drogas extends javax.swing.JFrame {
         rbtnConjuntoReferencia = new javax.swing.JRadioButton();
         rbtnValidacionCruzada = new javax.swing.JRadioButton();
         txtNumCarpetas = new javax.swing.JTextField();
-        btn_entrenar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnEvaluar.setText("Evaluar");
-        btnEvaluar.addActionListener(new java.awt.event.ActionListener() {
+        boton.setText("Evaluar");
+        boton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEvaluarActionPerformed(evt);
+                botonActionPerformed(evt);
             }
         });
-        jPanel5.add(btnEvaluar);
+        jPanel5.add(boton);
 
         txtPanelPrincipal.setColumns(20);
         txtPanelPrincipal.setRows(1);
@@ -156,13 +151,6 @@ public class Drogas extends javax.swing.JFrame {
             }
         });
 
-        btn_entrenar.setText("Entrenar");
-        btn_entrenar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_entrenarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -177,10 +165,6 @@ public class Drogas extends javax.swing.JFrame {
                         .addComponent(rbtnValidacionCruzada)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtNumCarpetas, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(109, 109, 109)
-                .addComponent(btn_entrenar)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,10 +173,7 @@ public class Drogas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbtnValidacionCruzada)
-                    .addComponent(txtNumCarpetas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_entrenar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtNumCarpetas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -204,18 +185,18 @@ public class Drogas extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -223,63 +204,19 @@ public class Drogas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEvaluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEvaluarActionPerformed
+    private void botonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonActionPerformed
         try {
+
             nv = new Naivayes();
-            Attribute atributoDeClase = instancias.classAttribute();
-            String resultado = "";
-            double valorTemp;
-//            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
-            nv.crearModelo(instancias);
-            // simep -siigo - aranda 
-
-            Instance instancia = (Instance) instancias.instance(0).copy();
-            for (int i = 0; i < instancias.numAttributes(); i++) {
-                Attribute attActual = instancias.attribute(i);
-                if (i != atributoDeClase.index()) {
-                    if (attActual.isNominal()) {
-                        JComboBox jcb = (JComboBox) listaComponentes.get(i);
-                        instancia.setValue(i, (String) jcb.getSelectedItem());
-                    } else {
-                        JTextField jtext = (JTextField) listaComponentes.get(i);
-                        valorTemp = Double.parseDouble(jtext.getText());
-                        instancia.setValue(i, valorTemp);
-                    }
-                }
-            }
-            System.out.println("instancia: " + instancia);
-            double[] probabilidades = nv.evaluarInstancia(instancia);
-            resultado += "EVALUACION DE LA INSTANCIA";
-            for (int i = 0; i < probabilidades.length; i++) {
-                resultado += "\nclase: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]);
-            }
-            txtPanelPrincipal.setText(resultado);
-        } catch (java.lang.NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Error. Los valores de los campos deben ser numéricos.");
-        }
-    }//GEN-LAST:event_btnEvaluarActionPerformed
-
-    private void rbtnValidacionCruzadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnValidacionCruzadaActionPerformed
-        txtNumCarpetas.setEnabled(true);
-    }//GEN-LAST:event_rbtnValidacionCruzadaActionPerformed
-
-    private void rbtnConjuntoReferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnConjuntoReferenciaActionPerformed
-        txtNumCarpetas.setEnabled(false);
-    }//GEN-LAST:event_rbtnConjuntoReferenciaActionPerformed
-
-    private void btn_entrenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_entrenarActionPerformed
-        try {
-            nv = new Naivayes();
-            Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
             Evaluacion eva = new Evaluacion(instancias);
+            double valorTemp;
 //            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
             int numCarpetas;
             boolean pruebaValCruzada = rbtnValidacionCruzada.isSelected();
-            String cadena;
             if (pruebaValCruzada) {
                 numCarpetas = Integer.parseInt(txtNumCarpetas.getText());
-                cadena = eva.evaluarConValidacionCruzada(instancias, numCarpetas);
+                int[][] matProb = eva.crearMatrizDeConfucionValidacionCruzada(instancias, numCarpetas);
                 nv = eva.getNaivayes();
             } else {
                 nv.crearModelo(instancias);
@@ -289,21 +226,44 @@ public class Drogas extends javax.swing.JFrame {
                 for (int i = 0; i < probabilidades.length; i++) {
                     System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
                 }
-                cadena = eva.evaluarConConjuntoDeDatos(nv, instancias);
-                System.out.println(nv);
+                eva.crearMatrizDeConfucion(nv, instancias);
             }
 
-            resultado += "Matriz de confucion: \n" + cadena;
+            resultado += "Matriz de confucion: \n" + eva.matrizConfucion_string();
             resultado += "\n\nrecall: \n" + eva.recall_string();
-            resultado += "fMeasure: \n" + eva.fMeasure_string();
-            resultado += "precision: \n" + eva.precision_string();
+//            resultado += "fMeasure: \n" + eva.fMeasure_string();
 
+            Instance instancia = (Instance) instancias.instance(0).copy();
+            for (int i = 0; i < instancias.numAttributes(); i++) {
+                Attribute attActual = instancias.attribute(i);
+                if (attActual.isNominal()) {
+                    JComboBox jcb = (JComboBox) listaComponentes.get(i);
+                    instancia.setValue(i, (String) jcb.getSelectedItem());
+                } else {
+                    JTextField jtext = (JTextField) listaComponentes.get(i);
+                    valorTemp = Double.parseDouble(jtext.getText());
+                    instancia.setValue(i, valorTemp);
+                }
+            }
+            System.out.println("instancia: " + instancia);
+            double[] probabilidades = nv.evaluarInstancia(instancia);
+            resultado += "\n\nEVALUACION DE LA INSTANCIA";
+            for (int i = 0; i < probabilidades.length; i++) {
+                resultado += "\nclase: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]);
+            }
             txtPanelPrincipal.setText(resultado);
-            btnEvaluar.setEnabled(true);
         } catch (java.lang.NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Error. Los valores de los campos deben ser numéricos.");
         }
-    }//GEN-LAST:event_btn_entrenarActionPerformed
+    }//GEN-LAST:event_botonActionPerformed
+
+    private void rbtnValidacionCruzadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnValidacionCruzadaActionPerformed
+        txtNumCarpetas.setEnabled(true);
+    }//GEN-LAST:event_rbtnValidacionCruzadaActionPerformed
+
+    private void rbtnConjuntoReferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnConjuntoReferenciaActionPerformed
+        txtNumCarpetas.setEnabled(false);
+    }//GEN-LAST:event_rbtnConjuntoReferenciaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -341,8 +301,7 @@ public class Drogas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEvaluar;
-    private javax.swing.JButton btn_entrenar;
+    private javax.swing.JButton boton;
     private javax.swing.ButtonGroup btngPrueba;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel5;

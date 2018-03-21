@@ -44,25 +44,38 @@ public class AlgoritmosMineria {
 
 //            nv.evaluarInstancias(instancias);
             Instance instancia = (Instance) instancias.instance(4).copy();
+            instancia.setValue(0, 49);
+            instancia.setValue(1, 1);
+            instancia.setValue(2, 2);
+            instancia.setValue(3, 0);
+            instancia.setValue(4, .789637);
+            instancia.setValue(5, .048518);
+            
+            instancia.setValue(0, 60);
+            instancia.setValue(1, 1);
+            instancia.setValue(2, 2);
+            instancia.setValue(3, 0);
+            instancia.setValue(4, .777205);
+            instancia.setValue(5, .05123);
 //            instancia 
-            double[] probabilidades = nv.evaluarInstancia(instancias.instance(4));
+            double[] probabilidades = nv.evaluarInstancia(instancia);
+            System.out.println(nv);
+                System.out.println("EVALUACION DE INSTANCIA");
             for (int i = 0; i < probabilidades.length; i++) {
-                System.out.println("val: " + instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
+                System.out.println(instancias.classAttribute().value(i) + ": " + String.format("%.2f", probabilidades[i]));
             }
             Evaluacion eva = new Evaluacion(instancias);
             int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
-            System.out.println("recall: \n" + eva.recall_string());
+            System.out.println("\nrecall: \n" + eva.recall_string());
             System.out.println("fMeasure: \n" + eva.fMeasure_string());
-            for (int[] ds : matProb) {
-                System.out.println("[" + Arrays.toString(ds));
-            }
+            System.out.println("precision: \n" + eva.precision_string());
+                System.out.println(eva.evaluarConConjuntoDeDatos(nv, instancias));
 //            System.out.println("--");
-//            matProb = eva.crearMatrizDeConfucionValidacionCruzada(instancias, 3);
+//            String result = eva.evaluarConValidacionCruzada(instancias, 3);
 //            System.out.println("recall: \n" + eva.recall_string());
 //            System.out.println("fMeasure: \n" + eva.fMeasure_string());
-//            for (int[] ds : matProb) {
-//                System.out.println("[" + Arrays.toString(ds));
-//            }
+//            System.out.println(result);
+            
         }
 
     }

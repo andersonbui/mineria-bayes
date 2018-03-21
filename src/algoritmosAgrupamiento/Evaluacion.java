@@ -8,6 +8,7 @@ package algoritmosAgrupamiento;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import utilidades.Util;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -39,8 +40,9 @@ public class Evaluacion {
      * @return
      */
     public int[][] crearMatrizDeConfucion(Naivayes modelo, Instances instancias) {
-        double[][] resultado = modelo.evaluarInstancias(instancias);
-        Attribute varClase = instancias.classAttribute();
+        Instances copiaInstancias = new Instances(instancias);
+        double[][] resultado = modelo.evaluarInstancias(copiaInstancias);
+        Attribute varClase = copiaInstancias.classAttribute();
         matrizConfusion = new int[varClase.numValues()][varClase.numValues()];
         sumaPredichos = new int[varClase.numValues()];
         sumaReales = new int[varClase.numValues()];
@@ -60,6 +62,9 @@ public class Evaluacion {
                 }
             }
             valReal = (int) instancia.value(varClase);
+//            if(valReal==4 && posMayor==0){
+//                System.out.println("");
+//            }
             matrizConfusion[valReal][posMayor]++;
             sumaReales[valReal]++;
             sumaPredichos[posMayor]++;
@@ -67,10 +72,64 @@ public class Evaluacion {
         return matrizConfusion;
     }
 
+    /**
+     *
+     * @param instancias
+     * @param numCarpetas
+     * @return
+     */
+    public String evaluarConValidacionCruzada(Instances instancias, int numCarpetas) {
+        Instances nuevasInstancias = new Instances(instancias);
+        int[][] matConf = crearMatrizDeConfucionValidacionCruzada(nuevasInstancias, numCarpetas);
+        return imprimirMatrizConfucion(matConf, instancias);
+    }
+ /**
+     *
+     * @param modelo
+     * @param instancias
+     * @return
+     */
+    public String evaluarConConjuntoDeDatos(Naivayes modelo,Instances instancias) {
+        Instances nuevasInstancias = new Instances(instancias);
+        int[][] matConf = crearMatrizDeConfucion(modelo, nuevasInstancias);
+        return imprimirMatrizConfucion(matConf, instancias);
+    }
+    /**
+     *
+     * @param matConf
+     * @param instancias
+     * @return
+     */
+    private String imprimirMatrizConfucion(int[][] matConf, Instances instancias) {
+        StringBuilder cadena = new StringBuilder();
+        Attribute varClase = instancias.classAttribute();
+        cadena.append("MATRIZ DE CONFUCION:\n");
+        int tamCadena = 5;
+        for (int i = -1; i < matConf.length; i++) {
+            if (i < 0) {
+
+                cadena.append(" ");
+                for (int k = 0; k < matConf[0].length; k++) {
+                    cadena.append(String.format("%" + tamCadena + "s", (char) (97 + k)));
+                }
+                cadena.append("\n");
+                continue;
+            }
+            int[] ds = matConf[i];
+            cadena.append("[");
+            for (int k = 0; k < ds.length; k++) {
+                cadena.append(String.format("%" + tamCadena + "s", "" + ds[k]));
+            }
+            cadena.append("] <= ").append((char) (97 + i)).append(" = ").append(varClase.value(i)).append("\n");
+        }
+        return cadena.toString();
+    }
+
     public int[][] crearMatrizDeConfucionValidacionCruzada(final Instances instancias, int numCarpetas) {
+        Instances nuevasInstancias = new Instances(instancias);
         nv = new Naivayes();
         Instances[] vectInstancias;
-        Cruzados cruzados = datosCruzados(instancias, numCarpetas);
+        Cruzados cruzados = datosCruzados(nuevasInstancias, numCarpetas);
         int[][] matConfucionTotal = null;
         for (int i = 0; i < cruzados.tamanio(); i++) {
             vectInstancias = cruzados.get(i);
@@ -157,11 +216,11 @@ public class Evaluacion {
         double precision;
         for (int i = 0; i < varClase.numValues(); i++) {
             precision = funcion.ejecutar(i);
-            cadena += varClase.value(i) + ": " + String.format("%.5f", precision) + "\n";
+            cadena += varClase.value(i) + ": " + Util.formatearDouble(precision) + "\n";
             sumatoria += sumaReales[i] * precision;
             totalReales += sumaReales[i];
         }
-        cadena += "Weighted Avg: " + String.format("%.5f", (sumatoria / totalReales)) + "\n\n";
+        cadena += "Weighted Avg: " + Util.formatearDouble(sumatoria / totalReales) + "\n\n";
         return cadena;
     }
 

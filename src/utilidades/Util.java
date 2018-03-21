@@ -22,7 +22,8 @@ package utilidades;
  */
 public class Util {
 
-    public static String formato = "%.5f";
+    public static final int NUM_DECIMALES = 5;
+    public static String formato = "%." + NUM_DECIMALES + "f";
 
     public static double probabilidad(double valor, double media, double desvEstandar) { //funcion de densidad de probabilidad normal
         double exponente = Math.exp(-Math.pow(valor - media, 2) / (2 * Math.pow(desvEstandar, 2)));
@@ -36,7 +37,7 @@ public class Util {
     public static String imprimirVectorDouble(double[] probVarClase) {
         StringBuilder cadena = new StringBuilder();
         for (double d : probVarClase) {
-            cadena.append(String.format(formato+" ", d));
+            cadena.append(String.format(formato + " ", d));
         }
         return cadena.toString();
     }
