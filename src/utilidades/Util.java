@@ -16,13 +16,19 @@
  */
 package utilidades;
 
+import java.util.ArrayList;
+import java.util.List;
+import weka.core.Attribute;
+import weka.core.Instance;
+import weka.core.Instances;
+
 /**
  *
  * @author debian
  */
 public class Util {
 
-    public static final int NUM_DECIMALES = 5;
+    public static final int NUM_DECIMALES = 4;
     public static String formato = "%." + NUM_DECIMALES + "f";
 
     public static double probabilidad(double valor, double media, double desvEstandar) { //funcion de densidad de probabilidad normal
@@ -40,6 +46,27 @@ public class Util {
             cadena.append(String.format(formato + " ", d));
         }
         return cadena.toString();
+    }
+    
+    /**
+     * retorna lista deatributos
+     *
+     * @return
+     */
+    public static List<Attribute> listaAtributos(Instances instancias) {
+        List listAtributos = new ArrayList();
+        for (int i = 0; i < instancias.numAttributes(); i++) {
+            listAtributos.add(instancias.attribute(i));
+        }
+        return listAtributos;
+    }
+
+    public static List<Instance> listaInstancias(Instances instancias) {
+        List listAtributos = new ArrayList();
+        for (int i = 0; i < instancias.numInstances(); i++) {
+            listAtributos.add(instancias.instance(i));
+        }
+        return listAtributos;
     }
 
 }

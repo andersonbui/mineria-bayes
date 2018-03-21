@@ -7,6 +7,7 @@ package algoritmosAgrupamiento;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import utilidades.Util;
 import weka.core.Attribute;
@@ -23,7 +24,7 @@ public class Evaluacion {
     int[] sumaReales;
     int[] sumaPredichos;
     private final Instances instancias;
-    Naivayes nv;
+    NaiveBayes nv;
 
     /**
      *
@@ -39,7 +40,7 @@ public class Evaluacion {
      * @param instancias
      * @return
      */
-    public int[][] crearMatrizDeConfucion(Naivayes modelo, Instances instancias) {
+    public int[][] crearMatrizDeConfucion(NaiveBayes modelo, Instances instancias) {
         Instances copiaInstancias = new Instances(instancias);
         double[][] resultado = modelo.evaluarInstancias(copiaInstancias);
         Attribute varClase = copiaInstancias.classAttribute();
@@ -62,9 +63,7 @@ public class Evaluacion {
                 }
             }
             valReal = (int) instancia.value(varClase);
-//            if(valReal==4 && posMayor==0){
-//                System.out.println("");
-//            }
+            // reales vs predichos en la matriz
             matrizConfusion[valReal][posMayor]++;
             sumaReales[valReal]++;
             sumaPredichos[posMayor]++;
@@ -83,17 +82,19 @@ public class Evaluacion {
         int[][] matConf = crearMatrizDeConfucionValidacionCruzada(nuevasInstancias, numCarpetas);
         return imprimirMatrizConfucion(matConf, instancias);
     }
- /**
+
+    /**
      *
      * @param modelo
      * @param instancias
      * @return
      */
-    public String evaluarConConjuntoDeDatos(Naivayes modelo,Instances instancias) {
+    public String evaluarConConjuntoDeDatos(NaiveBayes modelo, Instances instancias) {
         Instances nuevasInstancias = new Instances(instancias);
         int[][] matConf = crearMatrizDeConfucion(modelo, nuevasInstancias);
         return imprimirMatrizConfucion(matConf, instancias);
     }
+
     /**
      *
      * @param matConf
@@ -105,16 +106,13 @@ public class Evaluacion {
         Attribute varClase = instancias.classAttribute();
         cadena.append("MATRIZ DE CONFUCION:\n");
         int tamCadena = 5;
-        for (int i = -1; i < matConf.length; i++) {
-            if (i < 0) {
 
-                cadena.append(" ");
-                for (int k = 0; k < matConf[0].length; k++) {
-                    cadena.append(String.format("%" + tamCadena + "s", (char) (97 + k)));
-                }
-                cadena.append("\n");
-                continue;
-            }
+        cadena.append(" ");
+        for (int k = 0; k < matConf[0].length; k++) {
+            cadena.append(String.format("%" + tamCadena + "s", (char) (97 + k)));
+        }
+        cadena.append("\n");
+        for (int i = 0; i < matConf.length; i++) {
             int[] ds = matConf[i];
             cadena.append("[");
             for (int k = 0; k < ds.length; k++) {
@@ -127,7 +125,7 @@ public class Evaluacion {
 
     public int[][] crearMatrizDeConfucionValidacionCruzada(final Instances instancias, int numCarpetas) {
         Instances nuevasInstancias = new Instances(instancias);
-        nv = new Naivayes();
+        nv = new NaiveBayes();
         Instances[] vectInstancias;
         Cruzados cruzados = datosCruzados(nuevasInstancias, numCarpetas);
         int[][] matConfucionTotal = null;
@@ -224,14 +222,6 @@ public class Evaluacion {
         return cadena;
     }
 
-//    private String to_string() {
-//        Attribute varClase = instancias.classAttribute();
-//        String cadena = "";
-//        for (int i = 0; i < varClase.numValues(); i++) {
-//            cadena += varClase.value(i) + ": " + recall(i) + "\n";
-//        }
-//        return cadena;
-//    }
     /**
      *
      * @param indiceClase
@@ -284,12 +274,22 @@ public class Evaluacion {
         //alojar espacio para las carpetas
         for (int i = 0; i < vectCarpetaInstancias.length; i++) {
             vectCarpetaInstancias[i] = new Instances(instancias, 0);
+            vectCarpetaInstancias[i].delete();
             cruzados.add(vectCarpetaInstancias[i]);
         }
+        // ordenamiento por clase
+//        instancias.sort(varClase);
+        List<Instance> listaAtt = Util.listaInstancias(instancias);
+        listaAtt.sort((Instance inst_1, Instance inst_2) -> {
+            int resultado = ((Double) inst_1.value(varClase.index())).compareTo(inst_2.value(varClase.index()));
+            if (resultado == 0) {
+                return ((Double) inst_1.value(4)).compareTo(inst_2.value(4));
+            }
+            return resultado;
+        });
 
-        instancias.sort(varClase);
-        for (int i = 0; i < instancias.numInstances(); i++) {
-            Instance instanciaActual = instancias.instance(i);
+        for (int i = 0; i < listaAtt.size(); i++) {
+            Instance instanciaActual = listaAtt.get(i);
             vectCarpetaInstancias[i % vectCarpetaInstancias.length].add(instanciaActual);
         }
 
@@ -361,7 +361,7 @@ public class Evaluacion {
         public abstract double ejecutar(int i);
     }
 
-    public Naivayes getNaivayes() {
+    public NaiveBayes getNaivayes() {
         return nv;
     }
 

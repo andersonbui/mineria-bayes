@@ -5,7 +5,7 @@
  */
 package main;
 
-import algoritmosAgrupamiento.Naivayes;
+import algoritmosAgrupamiento.NaiveBayes;
 import algoritmosAgrupamiento.Evaluacion;
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +27,8 @@ public class AlgoritmosMineria {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
+        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {
@@ -39,7 +39,7 @@ public class AlgoritmosMineria {
 //            instancias.setClass(instancias.attribute("Sobrevivio"));
             instancias.setClass(instancias.attribute("Drug"));
 //            instancias.setClass(instancias.attribute("play"));
-            Naivayes nv = new Naivayes();
+            NaiveBayes nv = new NaiveBayes();
             nv.crearModelo(instancias);
 
 //            nv.evaluarInstancias(instancias);
@@ -51,12 +51,12 @@ public class AlgoritmosMineria {
             instancia.setValue(4, .789637);
             instancia.setValue(5, .048518);
             
-            instancia.setValue(0, 60);
-            instancia.setValue(1, 1);
-            instancia.setValue(2, 2);
-            instancia.setValue(3, 0);
-            instancia.setValue(4, .777205);
-            instancia.setValue(5, .05123);
+//            instancia.setValue(0, 60);
+//            instancia.setValue(1, 1);
+//            instancia.setValue(2, 2);
+//            instancia.setValue(3, 0);
+//            instancia.setValue(4, .777205);
+//            instancia.setValue(5, .05123);
 //            instancia 
             double[] probabilidades = nv.evaluarInstancia(instancia);
             System.out.println(nv);
@@ -70,11 +70,11 @@ public class AlgoritmosMineria {
             System.out.println("fMeasure: \n" + eva.fMeasure_string());
             System.out.println("precision: \n" + eva.precision_string());
                 System.out.println(eva.evaluarConConjuntoDeDatos(nv, instancias));
-//            System.out.println("--");
-//            String result = eva.evaluarConValidacionCruzada(instancias, 3);
-//            System.out.println("recall: \n" + eva.recall_string());
-//            System.out.println("fMeasure: \n" + eva.fMeasure_string());
-//            System.out.println(result);
+            System.out.println("--");
+            String result = eva.evaluarConValidacionCruzada(instancias, 10);
+            System.out.println("recall: \n" + eva.recall_string());
+            System.out.println("fMeasure: \n" + eva.fMeasure_string());
+            System.out.println(result);
             
         }
 

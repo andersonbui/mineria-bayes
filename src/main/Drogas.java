@@ -6,7 +6,7 @@
 package main;
 
 import algoritmosAgrupamiento.Evaluacion;
-import algoritmosAgrupamiento.Naivayes;
+import algoritmosAgrupamiento.NaiveBayes;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class Drogas extends javax.swing.JFrame {
      * Creates new form Drogas
      */
     List<JComponent> listaComponentes = new ArrayList();
-    Naivayes nv;
+    NaiveBayes nv;
     Instances instancias;
 
     public Drogas() {
@@ -43,8 +43,8 @@ public class Drogas extends javax.swing.JFrame {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
+//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
+        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
         if (file != null) {
@@ -225,7 +225,7 @@ public class Drogas extends javax.swing.JFrame {
 
     private void btnEvaluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEvaluarActionPerformed
         try {
-            nv = new Naivayes();
+            nv = new NaiveBayes();
             Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
             double valorTemp;
@@ -269,7 +269,7 @@ public class Drogas extends javax.swing.JFrame {
 
     private void btn_entrenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_entrenarActionPerformed
         try {
-            nv = new Naivayes();
+            nv = new NaiveBayes();
             Attribute atributoDeClase = instancias.classAttribute();
             String resultado = "";
             Evaluacion eva = new Evaluacion(instancias);
