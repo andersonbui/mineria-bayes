@@ -68,7 +68,7 @@ public class Naivayes {
             if (sumaUnos > 0) {
                 vectorPrecisiones[atributoActual.index()] = sumaValores / sumaUnos;
             }
-            System.out.println(String.format("%12s", "" + atributoActual.name() )+ " =>"  + Util.formatearDouble(vectorPrecisiones[atributoActual.index()]));
+            System.out.println(String.format("%12s", "" + atributoActual.name()) + " =>" + Util.formatearDouble(vectorPrecisiones[atributoActual.index()]));
         }
         return vectorPrecisiones;
     }
@@ -129,16 +129,16 @@ public class Naivayes {
                             vectorSumaValores[i] += matProb[i][k];
                         }
                     }
-                    // divicion para promedio
-                    for (int i = 0; i < matProb.length; i++) {
-//                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
-                        for (int l = 0; l < matProb[i].length; l++) {
-                            matProb[i][l] = (matProb[i][l]) / (vectorSumaValores[i]);
-
-                        }
-//                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(matProb[i]));
-                    }
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb, atributoActual);
+//                    // divicion para promedio
+//                    for (int i = 0; i < matProb.length; i++) {
+////                        System.out.println("[" + varClase.value(i) + "]:" + Arrays.toString(matProb[i]));
+//                        for (int l = 0; l < matProb[i].length; l++) {
+//                            matProb[i][l] = (matProb[i][l]);
+//
+//                        }
+////                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(matProb[i]));
+//                    }
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb,vectorSumaValores, atributoActual);
                 } else if (atributoActual.isNumeric()) {
                     vectorSumaValores = new double[varClase.numValues()];
                     double[][] contador = new double[varClase.numValues()][2];
@@ -170,7 +170,7 @@ public class Naivayes {
                         contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i]));
 //                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador, atributoActual);
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador,null, atributoActual);
                 }
             }
         }
@@ -196,15 +196,20 @@ public class Naivayes {
     private class MatProbabilidad {
 
         double[][] matrizProb;
+        private final double[] sumTotal;
         private final Attribute atributo;
-        String[] filasNumerica = {"Promedio", "Desviacion"};
+        String[] filasNumerica = {"Desviacion", "Promedio"};
 
-        public MatProbabilidad(double[][] matrizProb, Attribute atributo) {
+        public MatProbabilidad(double[][] matrizProb, double[] sumTotal, Attribute atributo) {
             this.matrizProb = matrizProb;
+            this.sumTotal = sumTotal;
             this.atributo = atributo;
         }
 
         public double get(int fil, int col) {
+            if (atributo.isNominal()) {
+                return matrizProb[fil][col] / sumTotal[fil];
+            }
             return matrizProb[fil][col];
         }
 
@@ -215,7 +220,7 @@ public class Naivayes {
             cadena.append("\n").append(atributo.name()).append("\n");
             cadena.append(formato(""));
             for (int k = -1; k < matrizProb.length; k++) {
-                if (k > 0) {
+                if (k >= 0) {
                     cadena.append(formato(varClase.value(k)));
                 }
             }
