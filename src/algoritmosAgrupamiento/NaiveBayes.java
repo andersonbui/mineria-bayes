@@ -78,9 +78,11 @@ public class NaiveBayes {
         if (varClase.isNominal()) {
             probVarClase = new double[varClase.numValues()];
             for (int k = 0; k < probVarClase.length; k++) {
-                probVarClase[k] += this.laplace ? 1 : 0;
+                probVarClase[k] +=  0;
+//                probVarClase[k] += this.laplace ? 1 : 0;
             }
-            sumContadores += this.laplace ? probVarClase.length : 0;
+            sumContadores += 0;
+//            sumContadores += this.laplace ? probVarClase.length : 0;
             sumContadores += instancias.numInstances();
             //conteo
             for (int i = 0; i < instancias.numInstances(); i++) {

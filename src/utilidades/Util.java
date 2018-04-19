@@ -17,6 +17,7 @@
 package utilidades;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -47,7 +48,7 @@ public class Util {
         }
         return cadena.toString();
     }
-    
+
     /**
      * retorna lista deatributos
      *
@@ -69,4 +70,52 @@ public class Util {
         return listAtributos;
     }
 
+    public static int indiceOrdenadamente(List<? extends Comparable> lista, Comparable punto, boolean ascendente) {
+        if (lista.isEmpty()) {
+            return 0;
+        }
+        int pos;
+        int sup = lista.size() - 1;
+        int inf = 0;
+        Object puntoPos;
+        int comparacion;
+        while (true) {
+            pos = inf + (sup - inf) / 2;
+            puntoPos = lista.get(pos);
+            comparacion = punto.compareTo(puntoPos) * (ascendente ? 1 : -1);
+            if (comparacion >= 0) {
+                inf = pos + (ascendente ? 1 : 1);
+            } else if (comparacion < 0) {
+
+                sup = pos + (ascendente ? -1 : -1);
+            }
+            if (sup < inf || comparacion == 0) {
+                return inf;
+            }
+        }
+    }
+
+    public static int indiceOrdenadamente(List<Object> lista, Comparator comparator, Object punto, boolean ascendente) {
+        if (lista.isEmpty()) {
+            return 0;
+        }
+        int pos;
+        int sup = lista.size() - 1;
+        int inf = 0;
+        Object puntoPos;
+        int comparacion;
+        while (true) {
+            pos = inf + (sup - inf) / 2;
+            puntoPos = lista.get(pos);
+            comparacion = comparator.compare(punto, puntoPos) * (ascendente ? 1 : -1);
+            if (comparacion >= 0) {
+                inf = pos + (ascendente ? 1 : 1);
+            } else if (comparacion < 0) {
+                sup = pos + (ascendente ? -1 : -1);
+            }
+            if (sup < inf || comparacion == 0) {
+                return inf;
+            }
+        }
+    }
 }
