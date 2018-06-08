@@ -8,9 +8,17 @@ package main;
 import algoritmosAgrupamiento.NaiveBayes;
 import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.KVecinos;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Scanner;
+
+import javax.xml.stream.util.StreamReaderDelegate;
+
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
@@ -29,7 +37,8 @@ public class AlgoritmosMineria {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
+        File file = new File("drug1n.arff");
+        
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
 //        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
@@ -44,21 +53,21 @@ public class AlgoritmosMineria {
 //            instancias.setClass(instancias.attribute("play"));
             knn();
             naivayes();
-
+            
         }
     }
 
     static void knn() {
 
         KVecinos kvencinos = new KVecinos();
-        Instance instancia = (Instance) instancias.instance(4).copy();
+        Instance instancia = (Instance) instancias.instance(2).copy();
         
-        instancia.setValue(0, 49);
-        instancia.setValue(1, 1);
-        instancia.setValue(2, 2);
-        instancia.setValue(3, 0);
-        instancia.setValue(4, .789637);
-        instancia.setValue(5, .048518);
+//        instancia.setValue(0, 49);
+//        instancia.setValue(1, 1);
+//        instancia.setValue(2, 1);
+//        instancia.setValue(3, 0);
+//        instancia.setValue(4, .789637);
+//        instancia.setValue(5, .048518);
         
         
 //            instancia.setValue(0, 60);
@@ -70,7 +79,7 @@ public class AlgoritmosMineria {
 
         System.out.println("prueba: " + instancia);
         System.out.println("knn: " + kvencinos.clasificar(instancias, 3, instancia));
-        System.out.println("knn: " + kvencinos.clasificar(instancias, 9, instancia));
+        System.out.println("knn: " + kvencinos.clasificar(instancias, 1, instancia));
 //        System.out.println("" + kvencinos.clasificar(instancias, 15, instancia));
     }
 
@@ -84,7 +93,7 @@ public class AlgoritmosMineria {
         
         instancia.setValue(0, 49);
         instancia.setValue(1, 1);
-        instancia.setValue(2, 2);
+        instancia.setValue(2, 1);
         instancia.setValue(3, 0);
         instancia.setValue(4, .789637);
         instancia.setValue(5, .048518);
