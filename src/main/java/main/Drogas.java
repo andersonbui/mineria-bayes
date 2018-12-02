@@ -43,10 +43,10 @@ public class Drogas extends javax.swing.JFrame {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/drug1n.arff");
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/clasificacion-drug.arff");
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/weather.arff");
-//        File file = new File("/home/debian/Documentos/unicauca/actualsemestre/mineria/dataset/titanic.arff");
+        File file = new File("./drug1n.arff");
+//        File file = new File("./clasificacion-drug.arff");
+//        File file = new File("./weather.arff");
+//        File file = new File("./titanic.arff");
         if (file != null) {
             try {
                 System.out.println("nombre archivo:" + file.getAbsolutePath());
