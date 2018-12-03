@@ -35,10 +35,15 @@ public class AlgoritmosMineria {
 
     public static void main(String[] args) throws IOException {
         BuscarArchivo ba = new BuscarArchivo();
+        File file;
+        if (args.length > 0) {
+            System.out.println("Hay parametros");
+            file = new File("./drug1n.arff");
+        } else {
+            file = ba.buscar();
+//            file = new File("./drug1n.arff");
+        }
 
-//        File file = ba.buscar();
-        File file = new File("drug1n.arff");
-        
 //        File file = new File("./clasificacion-drug.arff");
 //        File file = new File("./weather.arff");
 //        File file = new File("./titanic.arff");
@@ -53,7 +58,7 @@ public class AlgoritmosMineria {
 //            instancias.setClass(instancias.attribute("play"));
             knn();
             naivayes();
-            
+
         }
     }
 
@@ -61,22 +66,19 @@ public class AlgoritmosMineria {
 
         KVecinos kvencinos = new KVecinos();
         Instance instancia = (Instance) instancias.instance(2).copy();
-        
+
 //        instancia.setValue(0, 49);
 //        instancia.setValue(1, 1);
 //        instancia.setValue(2, 1);
 //        instancia.setValue(3, 0);
 //        instancia.setValue(4, .789637);
 //        instancia.setValue(5, .048518);
-        
-        
 //            instancia.setValue(0, 60);
 //            instancia.setValue(1, 1);
 //            instancia.setValue(2, 2);
 //            instancia.setValue(3, 0);
 //            instancia.setValue(4, .777205);
 //            instancia.setValue(5, .05123);
-
         System.out.println("prueba: " + instancia);
         System.out.println("knn: " + kvencinos.clasificar(instancias, 3, instancia));
         System.out.println("knn: " + kvencinos.clasificar(instancias, 1, instancia));
@@ -90,7 +92,7 @@ public class AlgoritmosMineria {
 
 //            nv.evaluarInstancias(instancias);
         Instance instancia = (Instance) instancias.instance(4).copy();
-        
+
         instancia.setValue(0, 49);
         instancia.setValue(1, 1);
         instancia.setValue(2, 1);
@@ -104,7 +106,6 @@ public class AlgoritmosMineria {
 //            instancia.setValue(3, 0);
 //            instancia.setValue(4, .777205);
 //            instancia.setValue(5, .05123);
-            
 //            instancia 
         double[] probabilidades = nv.evaluarInstancia(instancia);
 //        System.out.println(nv);
