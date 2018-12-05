@@ -8,6 +8,8 @@ package main;
 import algoritmosAgrupamiento.NaiveBayes;
 import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.KVecinos;
+import algoritmosAgrupamiento.Modelo;
+import algoritmosAgrupamiento.NaiveBayesSolitario;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,21 +34,32 @@ public class AlgoritmosMineria {
     /**
      */
     public static Instances instancias;
+    public static String archivoEntrenamiento;
+    public static String varClase;
 
     public static void main(String[] args) throws IOException {
         BuscarArchivo ba = new BuscarArchivo();
+        System.out.println("Parametros" + Arrays.toString(args));
         File file;
-        if (args.length > 0) {
-            System.out.println("Hay parametros");
-            file = new File("./drug1n.arff");
-        } else {
-            file = ba.buscar();
-//            file = new File("./drug1n.arff");
+        if ("-e".equals(args[0])) { //entrenar
+            archivoEntrenamiento = args[1];
+            varClase = args[2];
+            entrenar();
         }
 
-//        File file = new File("./clasificacion-drug.arff");
-//        File file = new File("./weather.arff");
-//        File file = new File("./titanic.arff");
+        if (args.length > 10) {
+            file = new File("src/" + args[0]);
+            System.out.println("arg2: " + args[1]);
+//            file = new File("src/drug1n.arff");
+        } else {
+//            file = ba.buscar();
+//            file = new File("./clasificacion.arff");
+            file = new File("src/areasdeconocimiento_INGENIERIA_1y0.arff");
+        }
+
+//        File file = new File("src/clasificacion-drug.arff");
+//        File file = new File("src/weather.arff");
+//        File file = new File("src/titanic.arff");
         if (file != null) {
             System.out.println("nombre archivo:" + file.getAbsolutePath());
             ArffLoader arrfloader = new ArffLoader();
@@ -54,10 +67,11 @@ public class AlgoritmosMineria {
             instancias = arrfloader.getDataSet();
 
 //            instancias.setClass(instancias.attribute("Sobrevivio"));
-            instancias.setClass(instancias.attribute("Drug"));
+//            instancias.setClass(instancias.attribute("Drug"));
+            instancias.setClass(instancias.attribute("ingenieria"));
 //            instancias.setClass(instancias.attribute("play"));
-            knn();
-            naivayes();
+//            knn();
+//            naivayes();
 
         }
     }
@@ -83,6 +97,22 @@ public class AlgoritmosMineria {
         System.out.println("knn: " + kvencinos.clasificar(instancias, 3, instancia));
         System.out.println("knn: " + kvencinos.clasificar(instancias, 1, instancia));
 //        System.out.println("" + kvencinos.clasificar(instancias, 15, instancia));
+    }
+
+    static void entrenar() throws IOException {
+        File file;
+//        file = new File("src/"+archivoEntrenamiento);
+//        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
+        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
+//        file = new File("src/drug1n.arff");
+        ArffLoader arrfloader = new ArffLoader();
+        arrfloader.setFile(file);
+        instancias = arrfloader.getDataSet();
+//        instancias.setClass(instancias.attribute(varClase));
+        instancias.setClass(instancias.attribute("ingenieria"));
+        NaiveBayesSolitario nv = new NaiveBayesSolitario();
+        Modelo modelo  = nv.crearModelo(instancias);
+        almacenamiento.Almacenamiento.guardarObjeto(modelo, "modelo");
     }
 
     static void naivayes() {

@@ -5,8 +5,6 @@
  */
 package algoritmosAgrupamiento;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import utilidades.Util;
 import weka.core.Attribute;
@@ -17,7 +15,7 @@ import weka.core.Instances;
  *
  * @author debian
  */
-public class NaiveBayes {
+public class NaiveBayesSolitario {
 
     MatProbabilidad[] vectorMatProbCondicionales;
     double[] probVarClase;
@@ -67,10 +65,15 @@ public class NaiveBayes {
      *
      * @param instanciasOriginales
      */
-    public void crearModelo(Instances instanciasOriginales) {
+    public Modelo crearModelo(Instances instanciasOriginales) {
+        Attribute[] atributos1;
+        Attribute varClase1;
+        double[] probVarClase1;
+        MatProbabilidad[] vectorMatProbCondicionales1;
+        double[] vectorPrecision1;
+
         this.instancias = new Instances(instanciasOriginales);
         varClase = instancias.classAttribute();
-
         // calculo de precisiones
         vectorPrecision = calcularPrecision(instancias);
         int sumContadores = 0;
@@ -78,7 +81,7 @@ public class NaiveBayes {
         if (varClase.isNominal()) {
             probVarClase = new double[varClase.numValues()];
             for (int k = 0; k < probVarClase.length; k++) {
-                probVarClase[k] +=  0;
+                probVarClase[k] += 0;
 //                probVarClase[k] += this.laplace ? 1 : 0;
             }
             sumContadores += 0;
@@ -95,7 +98,6 @@ public class NaiveBayes {
             }
 
         }
-
         //calculo de probabilidades condicionadas con respecto ala variable de clase
         vectorMatProbCondicionales = new MatProbabilidad[instancias.numAttributes()];
         double[] vectorSumaValores;
@@ -131,7 +133,7 @@ public class NaiveBayes {
                     //suma total agrupado por clase
                     for (int i = 0; i < instancias.numInstances(); i++) {
                         // se tiene en cuante la precision
-                        double valSeg = getValor(instancias.instance(i), atributoActual);
+                        double valSeg = getValor(instancias.instance(i), atributoActual, vectorPrecision);
 //                        double valSeg = instancias.instance(i).value(atributoActual);
                         int valPrin = (int) instancias.instance(i).value(varClase);
                         contador[valPrin][1] += valSeg;
@@ -144,7 +146,7 @@ public class NaiveBayes {
                     }
                     // calculo de desviacion estandar
                     for (int k = 0; k < instancias.numInstances(); k++) {
-                        double valSeg = getValor(instancias.instance(k), atributoActual);
+                        double valSeg = getValor(instancias.instance(k), atributoActual, vectorPrecision);
                         int valPrin = (int) instancias.instance(k).value(varClase);
                         // sumatoria de los cuadrados de la diferencia entre cada elemento y el promedio
                         contador[valPrin][0] += Math.pow(valSeg - contador[valPrin][1], 2);
@@ -160,6 +162,14 @@ public class NaiveBayes {
             }
         }
         this.instancias = new Instances(instanciasOriginales);
+
+        // variables para modelo
+        vectorMatProbCondicionales1 = this.vectorMatProbCondicionales;
+        vectorPrecision1 = this.vectorPrecision;
+        varClase1 = this.varClase;
+        probVarClase1 = this.probVarClase;
+        atributos1 = ontenerAtributos(instancias);
+        return new Modelo(probVarClase1, varClase1, vectorPrecision1, vectorMatProbCondicionales1, atributos1);
     }
 
     @Override
@@ -206,6 +216,7 @@ public class NaiveBayes {
         if (varClase == null) {
             throw new RuntimeException("Error, Se debe primero crear el modelo.");
         }
+        Attribute[] vecAtributos = ontenerAtributos(instancias);
         double suma = 0;
         String valorVarClase;
         int indiceValorVarClase;
@@ -213,7 +224,7 @@ public class NaiveBayes {
         for (int j = 0; j < varClase.numValues(); j++) {
             valorVarClase = varClase.value(j);
             indiceValorVarClase = varClase.indexOfValue(valorVarClase);
-            suma += probabilidadesVarClase[j] = evaluarInstancia(instancias, instanciaActual, indiceValorVarClase);
+            suma += probabilidadesVarClase[j] = evaluarInstancia(vecAtributos, instanciaActual, indiceValorVarClase);
         }
         for (int j = 0; j < varClase.numValues(); j++) {
             probabilidadesVarClase[j] = (probabilidadesVarClase[j] / suma) * 100;
@@ -222,10 +233,54 @@ public class NaiveBayes {
         return probabilidadesVarClase;
     }
 
-    private double evaluarInstancia(Instances instancias, Instance instanciaActual, int valAttPrincipal) {
+    public Attribute[] ontenerAtributos(Instances instancias) {
+        Attribute[] vecAtributos = new Attribute[instancias.numAttributes()];
+        for (int i = 0; i < vecAtributos.length; i++) {
+            vecAtributos[i] = instancias.attribute(i);
+        }
+        return vecAtributos;
+    }
+
+    /**
+     * probabilidad de la variable de clase de acuerdo a una instancia
+     *
+     * @param instanciaActual
+     * @param modelo
+     * @return double[atributo]
+     */
+    public static double[] evaluarInstancia(Instance instanciaActual, Modelo modelo) {
+        Attribute[] atributos = modelo.getAtributos();
+        Attribute varClase = modelo.getVarClase();
+
+        if (varClase == null) {
+            throw new RuntimeException("Error, Se debe primero crear el modelo.");
+        }
+        double suma = 0;
+        String valorVarClase;
+        int indiceValorVarClase;
+        double[] probabilidadesVarClase = new double[varClase.numValues()];
+        for (int j = 0; j < varClase.numValues(); j++) {
+            valorVarClase = varClase.value(j);
+            indiceValorVarClase = varClase.indexOfValue(valorVarClase);
+            suma += probabilidadesVarClase[j] = evaluarInstancia(modelo, instanciaActual, indiceValorVarClase);
+        }
+        for (int j = 0; j < varClase.numValues(); j++) {
+            probabilidadesVarClase[j] = (probabilidadesVarClase[j] / suma) * 100;
+            valorVarClase = varClase.value(j);
+        }
+        return probabilidadesVarClase;
+    }
+
+    private static double evaluarInstancia(Modelo modelo, Instance instanciaActual, int valAttPrincipal) {
+        Attribute[] atributos = modelo.getAtributos();
+        Attribute varClase = modelo.getVarClase();
+        double[] probVarClase = modelo.getProbVarClase();
+        MatProbabilidad[] vectorMatProbCondicionales = modelo.getVectorMatProbCondicionales();
+        double[] vectorPrecision = modelo.getVectorPrecision();
+
         double probabilidadTotal = 1;
-        for (int j = 0; j < instancias.numAttributes(); j++) {
-            Attribute atributoActual = instancias.attribute(j);
+        for (int j = 0; j < atributos.length; j++) {
+            Attribute atributoActual = atributos[j];
             if (j == varClase.index()) {
                 probabilidadTotal += Math.log10(probVarClase[valAttPrincipal]);
             } else {
@@ -236,7 +291,37 @@ public class NaiveBayes {
                     // optener probabilidad del valor del atributoActual y atributoPrincipal
                     probabilidadTotal += Math.log10(matP.get(valAttPrincipal, col));
                 } else {
-                    double valor = getValor(instanciaActual, atributoActual);
+                    double valor = getValor(instanciaActual, atributoActual, vectorPrecision);
+                    // obtener promedio desde la posicion 1
+                    double media = matP.get(valAttPrincipal, 1);
+                    // obtener desviacion desde la posicion 0
+                    double desvicacion = Math.max(matP.get(valAttPrincipal, 0), vectorPrecision[atributoActual.index()] / 6);
+//                    double desvicacion = matP.get(valAttPrincipal, 0);
+                    // probabilidad del valor del atributo actual
+                    double probaAtrib = Util.probabilidad(valor, media, desvicacion);
+//                    System.out.println("prob: "+probaAtrib);
+                    probabilidadTotal += Math.log10(probaAtrib);
+                }
+            }
+        }
+        return Math.pow(10, probabilidadTotal);
+    }
+
+    private double evaluarInstancia(Attribute[] instancias, Instance instanciaActual, int valAttPrincipal) {
+        double probabilidadTotal = 1;
+        for (int j = 0; j < instancias.length; j++) {
+            Attribute atributoActual = instancias[j];
+            if (j == varClase.index()) {
+                probabilidadTotal += Math.log10(probVarClase[valAttPrincipal]);
+            } else {
+                // optener la matriz de probabilidad condiccionada respectiva de atributoaActual
+                MatProbabilidad matP = vectorMatProbCondicionales[atributoActual.index()];
+                if (atributoActual.isNominal()) {
+                    int col = (int) instanciaActual.value(atributoActual);
+                    // optener probabilidad del valor del atributoActual y atributoPrincipal
+                    probabilidadTotal += Math.log10(matP.get(valAttPrincipal, col));
+                } else {
+                    double valor = getValor(instanciaActual, atributoActual, vectorPrecision);
                     // obtener promedio desde la posicion 1
                     double media = matP.get(valAttPrincipal, 1);
                     // obtener desviacion desde la posicion 0
@@ -258,9 +343,10 @@ public class NaiveBayes {
      *
      * @param instancia
      * @param atributo
+     * @param vectorPrecision
      * @return
      */
-    public double getValor(Instance instancia, Attribute atributo) {
+    public static double getValor(Instance instancia, Attribute atributo, double[] vectorPrecision) {
         double valor;
         valor = instancia.value(atributo);
         valor = valor / vectorPrecision[atributo.index()];
