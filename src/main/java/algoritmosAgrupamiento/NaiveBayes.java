@@ -123,7 +123,7 @@ public class NaiveBayes {
                         vectorSumaValores[valPrin]++;
                     }
 
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb, vectorSumaValores, atributoActual);
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb, vectorSumaValores, atributoActual,varClase);
                 } else if (atributoActual.isNumeric()) {
                     vectorSumaValores = new double[varClase.numValues()];
                     double[][] contador = new double[varClase.numValues()][2];
@@ -155,7 +155,7 @@ public class NaiveBayes {
                         contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i]));
 //                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador, null, atributoActual);
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador, null, atributoActual,varClase);
                 }
             }
         }

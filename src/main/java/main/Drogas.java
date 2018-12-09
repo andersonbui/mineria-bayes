@@ -43,7 +43,7 @@ public class Drogas extends javax.swing.JFrame {
         BuscarArchivo ba = new BuscarArchivo();
 
 //        File file = ba.buscar();
-        File file = new File("./drug1n.arff");
+        File file = new File("src/areasdeconocimiento-INGENIERIA.arff");
 //        File file = new File("./clasificacion-drug.arff");
 //        File file = new File("./weather.arff");
 //        File file = new File("./titanic.arff");
@@ -54,7 +54,8 @@ public class Drogas extends javax.swing.JFrame {
                 arrfloader.setFile(file);
                 instancias = arrfloader.getDataSet();
 //            instancias.setClass(instancias.attribute("Sobrevivio"));
-                instancias.setClass(instancias.attribute("Drug"));
+                instancias.setClass(instancias.attribute("ingenieria"));
+//                instancias.setClass(instancias.attribute("Drug"));
 //                instancias.setClass(instancias.attribute("play"));
 
                 // ==== definir listas seleccionables ====
@@ -73,6 +74,8 @@ public class Drogas extends javax.swing.JFrame {
                         } else {
                             addCampoText(titulo);
                         }
+                    }else{
+                        listaComponentes.add(null);
                     }
                 }
             } catch (IOException ex) {
@@ -232,7 +235,7 @@ public class Drogas extends javax.swing.JFrame {
 //            int[][] matProb = eva.crearMatrizDeConfucion(nv, instancias);
             nv.crearModelo(instancias);
             // simep -siigo - aranda 
-
+//            int indice
             Instance instancia = (Instance) instancias.instance(0).copy();
             for (int i = 0; i < instancias.numAttributes(); i++) {
                 Attribute attActual = instancias.attribute(i);

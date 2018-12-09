@@ -37,43 +37,47 @@ public class AlgoritmosMineria {
     public static String archivoEntrenamiento;
     public static String varClase;
 
-    public static void main(String[] args) throws IOException {
-        BuscarArchivo ba = new BuscarArchivo();
-        System.out.println("Parametros" + Arrays.toString(args));
-        File file;
-        if ("-e".equals(args[0])) { //entrenar
-            archivoEntrenamiento = args[1];
-            varClase = args[2];
-            entrenar();
-        }
+    public void main(String[] args) throws IOException {
 
-        if (args.length > 10) {
-            file = new File("src/" + args[0]);
-            System.out.println("arg2: " + args[1]);
-//            file = new File("src/drug1n.arff");
-        } else {
-//            file = ba.buscar();
-//            file = new File("./clasificacion.arff");
-            file = new File("src/areasdeconocimiento_INGENIERIA_1y0.arff");
-        }
+//        entrenar();
+        probar();
 
-//        File file = new File("src/clasificacion-drug.arff");
-//        File file = new File("src/weather.arff");
-//        File file = new File("src/titanic.arff");
-        if (file != null) {
-            System.out.println("nombre archivo:" + file.getAbsolutePath());
-            ArffLoader arrfloader = new ArffLoader();
-            arrfloader.setFile(file);
-            instancias = arrfloader.getDataSet();
-
-//            instancias.setClass(instancias.attribute("Sobrevivio"));
-//            instancias.setClass(instancias.attribute("Drug"));
-            instancias.setClass(instancias.attribute("ingenieria"));
-//            instancias.setClass(instancias.attribute("play"));
-//            knn();
-//            naivayes();
-
-        }
+//        BuscarArchivo ba = new BuscarArchivo();
+//        System.out.println("Parametros" + Arrays.toString(args));
+//        File file;
+//        if ("-e".equals(args[0])) { //entrenar
+//            archivoEntrenamiento = args[1];
+//            varClase = args[2];
+//            entrenar();
+//        }
+//
+//        if (args.length > 10) {
+//            file = new File("src/" + args[0]);
+//            System.out.println("arg2: " + args[1]);
+////            file = new File("src/drug1n.arff");
+//        } else {
+////            file = ba.buscar();
+////            file = new File("./clasificacion.arff");
+//            file = new File("src/areasdeconocimiento_INGENIERIA_1y0.arff");
+//        }
+//
+////        File file = new File("src/clasificacion-drug.arff");
+////        File file = new File("src/weather.arff");
+////        File file = new File("src/titanic.arff");
+//        if (file != null) {
+//            System.out.println("nombre archivo:" + file.getAbsolutePath());
+//            ArffLoader arrfloader = new ArffLoader();
+//            arrfloader.setFile(file);
+//            instancias = arrfloader.getDataSet();
+//
+////            instancias.setClass(instancias.attribute("Sobrevivio"));
+////            instancias.setClass(instancias.attribute("Drug"));
+//            instancias.setClass(instancias.attribute("ingenieria"));
+////            instancias.setClass(instancias.attribute("play"));
+////            knn();
+////            naivayes();
+//
+//        }
     }
 
     static void knn() {
@@ -108,11 +112,36 @@ public class AlgoritmosMineria {
         ArffLoader arrfloader = new ArffLoader();
         arrfloader.setFile(file);
         instancias = arrfloader.getDataSet();
+
 //        instancias.setClass(instancias.attribute(varClase));
         instancias.setClass(instancias.attribute("ingenieria"));
         NaiveBayesSolitario nv = new NaiveBayesSolitario();
-        Modelo modelo  = nv.crearModelo(instancias);
+        Modelo modelo = nv.crearModelo(instancias);
         almacenamiento.Almacenamiento.guardarObjeto(modelo, "modelo");
+    }
+
+    static void probar() throws IOException {
+        ArffLoader arrfloader = new ArffLoader();
+        File file;
+        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
+        arrfloader.setFile(file);
+        Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto("modelo");
+        Instances instancias = arrfloader.getDataSet();
+        Instance instanciaActual = instancias.firstInstance();
+        int indiceClase = modelo.getVarClase().index();
+
+        NaiveBayesSolitario nv = new NaiveBayesSolitario();
+        double[] result = nv.evaluarInstancia(instanciaActual, modelo);
+//        String[] respuestas = new String[result.length];
+        int mayor = 0;
+        for (int i = 1; i < result.length; i++) {
+            if (result[mayor] < result[i]) {
+                mayor = i;
+            }
+        }
+        System.out.println("instancia: " + instanciaActual.toString());
+        System.out.println("resultado: " + Arrays.toString(result));
+        System.out.println("resultado: " + instancias.attribute(indiceClase).value(mayor));
     }
 
     static void naivayes() {
