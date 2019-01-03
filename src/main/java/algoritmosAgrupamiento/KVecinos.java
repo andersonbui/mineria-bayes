@@ -41,17 +41,17 @@ public class KVecinos {
 
     /**
      *
-     * @param d
-     * @param k
-     * @param t
-     * @return
+     * @param instancias instancias usadas para clasificar
+     * @param numInstancias numero de instancias
+     * @param instancia instancia a clasificar
+     * @return clase a la cualpertenece la instancia
      */
-    public String clasificar(Instances d, int k, Instance t) {
+    public String clasificar(Instances instancias, int numInstancias, Instance instancia) {
         int c;
-        clase = d.classAttribute();
-        List<Instance> lista = Util.listaInstancias(d);
+        clase = instancias.classAttribute();
+        List<Instance> lista = Util.listaInstancias(instancias);
         // terner en cuenta la instancia a clasificar para la normalización
-        lista.add(0, t);
+        lista.add(0, instancia);
         // normalizar lista
         lista = normalizar(lista);
         // recuperar instancia a clasificar pero normalizada
@@ -66,22 +66,22 @@ public class KVecinos {
             // posición del elemento actual dentro de la lista de semejantes
             int posicion = Util.indiceOrdenadamente(listaResultado, insDis, true);
             listaResultado.add(posicion, insDis);
-            if (listaResultado.size() > k) {
-                listaResultado.remove(k);
+            if (listaResultado.size() > numInstancias) {
+                listaResultado.remove(numInstancias);
             }
         }
 //        int posMayor = mayorFrecuencia(k, listaResultado);
-        int posMayor = busquedaPor(k, listaResultado);
+        int posMayor = busquedaPor(numInstancias, listaResultado);
         return clase.value(posMayor);
     }
 
     /**
      *
-     * @param k
-     * @param listaResultado
-     * @return
+     * @param numInstancias numero de instancias
+     * @param listaResultado lista donde buscar
+     * @return indice de la instancia encontrada
      */
-    public int busquedaPor(int k, List listaResultado) {
+    public int busquedaPor(int numInstancias, List listaResultado) {
         double[] contadorClases = new double[clase.numValues()];
         // inicializacion sumadores
         for (int i = 0; i < contadorClases.length; i++) {
@@ -89,7 +89,7 @@ public class KVecinos {
         }
         InstanciaDistancia idAux;
         // suma de cuadrado de clases
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < numInstancias; i++) {
             idAux = (InstanciaDistancia) listaResultado.get(i);
             int pos = (int) idAux.instancia.value(clase);
             if (contadorClases[pos] == Double.POSITIVE_INFINITY) {
@@ -117,14 +117,14 @@ public class KVecinos {
 
     /**
      *
-     * @param k
-     * @param listaResultado
-     * @return
+     * @param numInstancias numero de instancias
+     * @param listaResultado lista donde buscar
+     * @return indice de la instancia encontrada
      */
-    public int mayorFrecuencia(int k, List listaResultado) {
+    public int mayorFrecuencia(int numInstancias, List listaResultado) {
         int[] contadorClases = new int[clase.numValues()];
         // conteo de clases
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < numInstancias; i++) {
             int pos = (int) ((InstanciaDistancia) listaResultado.get(i)).instancia.value(clase);
             contadorClases[pos]++;
         }
@@ -142,9 +142,9 @@ public class KVecinos {
 
     /**
      *
-     * @param vec1
-     * @param vec2
-     * @return
+     * @param vec1 vector uno para el calculo
+     * @param vec2 vector dos para el calculo
+     * @return distancia euclidiana
      */
     public double distanciaEuclidiana(Instance vec1, Instance vec2) {
         double suma = 0;
@@ -163,8 +163,8 @@ public class KVecinos {
 
     /**
      *
-     * @param lista
-     * @return
+     * @param lista lista de instancias a normalizar
+     * @return lista de instancias normalizadas
      */
     private List<Instance> normalizar(List<Instance> lista) {
         Instance instanciaMayores = (Instance) lista.get(0).copy();

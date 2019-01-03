@@ -39,15 +39,19 @@ public class Consola {
 
     public static void main(String[] args) throws IOException {
 
-        String modelo = "modelo";
-        if ("-e".equals(args[0])) { //entrenar
-            archivoEntrenamiento = args[1];
-            atributoClase = args[2];
-            entrenar(modelo, archivoEntrenamiento, atributoClase);
-        } else if ("-p".equals(args[0])) {
-            String archivoInstancia = args[1];
-            modelo = args[2];
-            predecir("modelo", archivoInstancia);
+        if (args.length > 0) {
+            String modelo = "modelo";
+            if ("-e".equals(args[0])) { //entrenar
+                archivoEntrenamiento = args[1];
+                atributoClase = args[2];
+                entrenar(modelo, archivoEntrenamiento, atributoClase);
+            } else if ("-p".equals(args[0])) {
+                String archivoInstancia = args[1];
+                modelo = args[2];
+                predecir("modelo", archivoInstancia);
+            } else{
+                System.out.println("Ayuda");
+            }
         } else {
             System.out.println("Ayuda");
         }
@@ -77,18 +81,18 @@ public class Consola {
 
     /**
      *
-     * @param nombreInstancia nombre del archivo que contiene el modelo ya
+     * @param archivoModelo nombre del archivo que contiene el modelo ya
      * entrenado
-     * @param archivoInstancias nombre del archivo que contiene la instancia a
+     * @param archivoInstancia nombre del archivo que contiene la instancia a
      * predecir
      * @throws IOException
      */
-    static void predecir(String nombreInstancia, String archivoInstancias) throws IOException {
+    static void predecir(String archivoModelo, String archivoInstancia) throws IOException {
         ArffLoader arrfloader = new ArffLoader();
         File file;
-        file = new File(archivoInstancias);
+        file = new File(archivoInstancia);
         arrfloader.setFile(file);
-        Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto(nombreInstancia);
+        Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto(archivoModelo);
         Instances instancias = arrfloader.getDataSet();
         Instance instanciaActual = instancias.firstInstance();
         int indiceClase = modelo.getVarClase().index();

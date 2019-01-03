@@ -28,7 +28,7 @@ public class Evaluacion {
 
     /**
      *
-     * @param instancias
+     * @param instancias instancias para el entrenamiento
      */
     public Evaluacion(Instances instancias) {
         this.instancias = instancias;
@@ -36,9 +36,9 @@ public class Evaluacion {
 
     /**
      *
-     * @param modelo
-     * @param instancias
-     * @return
+     * @param modelo modelo para crear matriz de confucion
+     * @param instancias instancias para crear matriz de confucion
+     * @return retorna la matriz de confucion 
      */
     public int[][] crearMatrizDeConfucion(NaiveBayes modelo, Instances instancias) {
         Instances copiaInstancias = new Instances(instancias);
@@ -73,9 +73,9 @@ public class Evaluacion {
 
     /**
      *
-     * @param instancias
-     * @param numCarpetas
-     * @return
+     * @param instancias instancias que se usan en la validacio cruzada
+     * @param numCarpetas numero e carpetas en que se dividiran las instancias
+     * @return Cadena que contiene la validacion
      */
     public String evaluarConValidacionCruzada(Instances instancias, int numCarpetas) {
         Instances nuevasInstancias = new Instances(instancias);
@@ -85,9 +85,9 @@ public class Evaluacion {
 
     /**
      *
-     * @param modelo
-     * @param instancias
-     * @return
+     * @param modelo clase modelo usado para evaluar el conjunto de datos
+     * @param instancias instancias que seran evaluadas
+     * @return retorna la matriz en una cadena
      */
     public String evaluarConConjuntoDeDatos(NaiveBayes modelo, Instances instancias) {
         Instances nuevasInstancias = new Instances(instancias);
@@ -97,9 +97,9 @@ public class Evaluacion {
 
     /**
      *
-     * @param matConf
-     * @param instancias
-     * @return
+     * @param matConf matriz de confucion que sera impresa
+     * @param instancias de donde se obtiene la variable de clase
+     * @return obtiene la cadena que contiene impresa la matriz de confucion
      */
     private String imprimirMatrizConfucion(int[][] matConf, Instances instancias) {
         StringBuilder cadena = new StringBuilder();
@@ -163,8 +163,8 @@ public class Evaluacion {
      *       total positives
      * </pre>
      *
-     * @param indice
-     * @return
+     * @param indice indice del elemento a calcular recuerdo
+     * @return el recuerdocalculado
      */
     public double recall(int indice) {
         double correctos = 0;
@@ -224,8 +224,8 @@ public class Evaluacion {
 
     /**
      *
-     * @param indiceClase
-     * @return
+     * @param indiceClase indice correspondiente a la variable de clase
+     * @return el valor de la medida F
      */
     public double fMeasure(int indiceClase) {
         double recall = recall(indiceClase);
@@ -245,8 +245,8 @@ public class Evaluacion {
      *  total predicted as positive
      * </pre>
      *
-     * @param indice
-     * @return
+     * @param indice indice del elemento a calcular presicion
+     * @return el valor de la presicin
      */
     public double precision(int indice) {
         double correctos = 0;
@@ -261,11 +261,11 @@ public class Evaluacion {
     }
 
     /**
-     * obtine el conjunto de <numcarpetas> carpetas para una validacion cruzada
+     * obtine el conjunto de numcarpetas carpetas para una validacion cruzada
      *
-     * @param instancias
+     * @param instancias instancias que se usaran para crear el conjunto de carpetas
      * @param numcarpetas numero de carpetas dentro del conjunto resultado
-     * @return
+     * @return retorna el objeto Cruzados que contiene el conjunto de carpetas
      */
     public Cruzados datosCruzados(final Instances instancias, int numcarpetas) {
         Attribute varClase = instancias.classAttribute();
@@ -299,15 +299,15 @@ public class Evaluacion {
     /**
      * retorna el resultado de sumar las dos matrices pasadas por parametro.
      *
-     * @param matConfucionTotal
-     * @param result
-     * @return
+     * @param matrixUno primer matriz a sumar
+     * @param matrizDos segunda matriz a sumar
+     * @return resultado de la suma de las dos matrices pasadas por parametro
      */
-    private int[][] sumar(int[][] matConfucionTotal, int[][] result) {
-        int[][] suma = new int[result.length][result[0].length];
-        for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j < result[0].length; j++) {
-                suma[i][j] = matConfucionTotal[i][j] + result[i][j];
+    private int[][] sumar(int[][] matrixUno, int[][] matrizDos) {
+        int[][] suma = new int[matrizDos.length][matrizDos[0].length];
+        for (int i = 0; i < matrizDos.length; i++) {
+            for (int j = 0; j < matrizDos[0].length; j++) {
+                suma[i][j] = matrixUno[i][j] + matrizDos[i][j];
             }
         }
         return suma;
@@ -335,8 +335,8 @@ public class Evaluacion {
          * indice, y la primera instancia, contiene las instancias de todas las
          * demas carpetas juntas.
          *
-         * @param indice
-         * @return
+         * @param indice indice de la instancias
+         * @return dos grupos de instancias
          */
         public Instances[] get(int indice) {
             Instances instancias1 = null;
