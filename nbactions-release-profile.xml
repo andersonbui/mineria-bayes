@@ -43,10 +43,10 @@
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
-        <action>
+<!--        <action>
             <actionName>javadoc</actionName>
             <packagings>
                 <packaging>*</packaging>
             </packagings>
-        </action>
+        </action>-->
     </actions>
