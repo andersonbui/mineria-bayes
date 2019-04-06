@@ -3,55 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package com.interpro.mineria;
 
-import algoritmosAgrupamiento.NaiveBayes;
-import algoritmosAgrupamiento.Evaluacion;
-import algoritmosAgrupamiento.KVecinos;
 import algoritmosAgrupamiento.Modelo;
 import algoritmosAgrupamiento.NaiveBayesSolitario;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Scanner;
-
-import javax.xml.stream.util.StreamReaderDelegate;
-
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 
 /**
  *
- * @author debian
+ * @author andersonbui
  */
-public class Consola {
+public class Mineria {
 
     /**
+     * 
      */
-    public static Instances instancias;
-    public static String archivoEntrenamiento;
-    public static String atributoClase;
-
-    public static void main(String[] args) throws IOException {
-
-        String modelo = "modelo";
-        if ("-e".equals(args[0])) { //entrenar
-            archivoEntrenamiento = args[1];
-            atributoClase = args[2];
-            entrenar(modelo, archivoEntrenamiento, atributoClase);
-        } else if ("-p".equals(args[0])) {
-            String archivoInstancia = args[1];
-            modelo = args[2];
-            predecir("modelo", archivoInstancia);
-        } else {
-            System.out.println("Ayuda");
-        }
-
+    public Mineria() {
     }
 
     /**
@@ -62,11 +34,12 @@ public class Consola {
      * @param atributoClase nombre del atributo de clase
      * @throws IOException
      */
-    static void entrenar(String nombreModelo, String archivoInstancias, String atributoClase) throws IOException {
+    public void entrenar(String nombreModelo, String archivoInstancias, String atributoClase) throws IOException {
         File file;
         file = new File(archivoInstancias);
         ArffLoader arrfloader = new ArffLoader();
         arrfloader.setFile(file);
+        Instances instancias;
         instancias = arrfloader.getDataSet();
 
         instancias.setClass(instancias.attribute(atributoClase));
@@ -83,7 +56,7 @@ public class Consola {
      * predecir
      * @throws IOException
      */
-    static void predecir(String nombreInstancia, String archivoInstancias) throws IOException {
+    public void predecir(String nombreInstancia, String archivoInstancias) throws IOException {
         ArffLoader arrfloader = new ArffLoader();
         File file;
         file = new File(archivoInstancias);
@@ -106,5 +79,4 @@ public class Consola {
         System.out.println("resultado: " + Arrays.toString(result));
         System.out.println("resultado: " + instancias.attribute(indiceClase).value(mayor));
     }
-
 }

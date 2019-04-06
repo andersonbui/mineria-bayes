@@ -3,23 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package com.interpro.mineria;
 
 import algoritmosAgrupamiento.NaiveBayes;
-import algoritmosAgrupamiento.Evaluacion;
 import algoritmosAgrupamiento.KVecinos;
 import algoritmosAgrupamiento.Modelo;
 import algoritmosAgrupamiento.NaiveBayesSolitario;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Scanner;
-
-import javax.xml.stream.util.StreamReaderDelegate;
 
 import weka.core.Instance;
 import weka.core.Instances;

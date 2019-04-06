@@ -16,14 +16,20 @@ import weka.core.Instances;
  * @author debian
  */
 public class NaiveBayesSolitario {
-
+    
     MatProbabilidad[] vectorMatProbCondicionales;
     double[] probVarClase;
     Instances instancias;
     Attribute varClase;
     double[] vectorPrecision;
     private boolean laplace = true;
-
+ 
+    
+    /**
+     * 
+     * @param instancias descripcion
+     * @return 
+     */
     private static double[] calcularPrecision(Instances instancias) {
         double sumaUnos;
         double sumaValores;
@@ -63,7 +69,7 @@ public class NaiveBayesSolitario {
 
     /**
      *
-     * @param instanciasOriginales
+     * @param instanciasOriginales descripcion
      */
     public Modelo crearModelo(Instances instanciasOriginales) {
         Attribute[] atributos1;
@@ -125,7 +131,7 @@ public class NaiveBayesSolitario {
                         vectorSumaValores[valPrin]++;
                     }
 
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb, vectorSumaValores, atributoActual,varClase);
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(matProb, vectorSumaValores, atributoActual, varClase);
                 } else if (atributoActual.isNumeric()) {
                     vectorSumaValores = new double[varClase.numValues()];
                     double[][] contador = new double[varClase.numValues()][2];
@@ -157,7 +163,7 @@ public class NaiveBayesSolitario {
                         contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i]));
 //                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
-                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador, null, atributoActual,varClase);
+                    vectorMatProbCondicionales[j] = new MatProbabilidad(contador, null, atributoActual, varClase);
                 }
             }
         }
@@ -172,6 +178,10 @@ public class NaiveBayesSolitario {
         return new Modelo(probVarClase1, varClase1, vectorPrecision1, vectorMatProbCondicionales1, atributos1);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         StringBuilder cadena = new StringBuilder();
@@ -191,7 +201,7 @@ public class NaiveBayesSolitario {
     /**
      * probabilidad de la variable de clase de acuerdo a las instancias
      *
-     * @param instancias
+     * @param instancias descripcion
      * @return double[instancia][atributo]
      */
     public double[][] evaluarInstancias(Instances instancias) {
@@ -209,7 +219,7 @@ public class NaiveBayesSolitario {
     /**
      * probabilidad de la variable de clase de acuerdo a una instancia
      *
-     * @param instanciaActual
+     * @param instanciaActual descripcion
      * @return double[atributo]
      */
     public double[] evaluarInstancia(Instance instanciaActual) {
@@ -244,8 +254,8 @@ public class NaiveBayesSolitario {
     /**
      * probabilidad de la variable de clase de acuerdo a una instancia
      *
-     * @param instanciaActual
-     * @param modelo
+     * @param instanciaActual descripcion
+     * @param modelo descripcion
      * @return double[atributo]
      */
     public static double[] evaluarInstancia(Instance instanciaActual, Modelo modelo) {
@@ -270,7 +280,13 @@ public class NaiveBayesSolitario {
         }
         return probabilidadesVarClase;
     }
-
+/**
+ * 
+ * @param modelo descripcion
+ * @param instanciaActual descripcion
+ * @param valAttPrincipal descripcion
+ * @return  descripcion
+ */
     private static double evaluarInstancia(Modelo modelo, Instance instanciaActual, int valAttPrincipal) {
         Attribute[] atributos = modelo.getAtributos();
         Attribute varClase = modelo.getVarClase();
@@ -306,7 +322,13 @@ public class NaiveBayesSolitario {
         }
         return Math.pow(10, probabilidadTotal);
     }
-
+/**
+ * 
+ * @param instancias descripcion
+ * @param instanciaActual descripcion
+ * @param valAttPrincipal descripcion
+ * @return  descripcion
+ */
     private double evaluarInstancia(Attribute[] instancias, Instance instanciaActual, int valAttPrincipal) {
         double probabilidadTotal = 1;
         for (int j = 0; j < instancias.length; j++) {
@@ -341,11 +363,11 @@ public class NaiveBayesSolitario {
      * obtiene el valor de la instancia para una determinado atributo, teniendo
      * en cuenta la presicionpara dicho atributo.
      *
-     * @param instancia
-     * @param atributo
-     * @param vectorPrecision
-     * @return
-     */
+     * @param instancia descripcion
+     * @param atributo descripcion
+     * @param vectorPrecision descripcion
+     * @return descripcion
+     */ 
     public static double getValor(Instance instancia, Attribute atributo, double[] vectorPrecision) {
         double valor;
         valor = instancia.value(atributo);
