@@ -50,22 +50,22 @@ public class Mineria {
 
     /**
      *
-     * @param nombreInstancia nombre del archivo que contiene el modelo ya
+     * @param archivo_modelo nombre del archivo que contiene el modelo ya
      * entrenado
      * @param archivoInstancias nombre del archivo que contiene la instancia a
      * predecir
      * @throws IOException
      */
-    public void predecir(String nombreInstancia, String archivoInstancias) throws IOException {
+    public String predecir(String archivo_modelo, String archivoInstancias) throws IOException {
         ArffLoader arrfloader = new ArffLoader();
         File file;
         file = new File(archivoInstancias);
         arrfloader.setFile(file);
-        Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto(nombreInstancia);
+        Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto(archivo_modelo);
         Instances instancias = arrfloader.getDataSet();
         Instance instanciaActual = instancias.firstInstance();
         int indiceClase = modelo.getVarClase().index();
-
+        
         NaiveBayesSolitario nv = new NaiveBayesSolitario();
         double[] result = nv.evaluarInstancia(instanciaActual, modelo);
 //        String[] respuestas = new String[result.length];
@@ -75,8 +75,10 @@ public class Mineria {
                 mayor = i;
             }
         }
-        System.out.println("instancia: " + instanciaActual.toString());
-        System.out.println("resultado: " + Arrays.toString(result));
-        System.out.println("resultado: " + instancias.attribute(indiceClase).value(mayor));
+        
+//        System.out.println("instancia: " + instanciaActual.toString());
+//        System.out.println("resultado: " + Arrays.toString(result));
+//        System.out.println("resultado: " + instancias.attribute(indiceClase).value(mayor));
+        return instancias.attribute(indiceClase).value(mayor);
     }
 }
