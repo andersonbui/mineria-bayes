@@ -30,9 +30,9 @@ public class AlgoritmosMineria {
     public static String archivoEntrenamiento;
     public static String varClase;
 
-    public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
-//        entrenar();
+        entrenar();
         probar();
 
 //        BuscarArchivo ba = new BuscarArchivo();

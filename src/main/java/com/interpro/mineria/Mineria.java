@@ -9,7 +9,9 @@ import algoritmosAgrupamiento.Modelo;
 import algoritmosAgrupamiento.NaiveBayesSolitario;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
@@ -21,7 +23,7 @@ import weka.core.converters.ArffLoader;
 public class Mineria {
 
     /**
-     * 
+     *
      */
     public Mineria() {
     }
@@ -54,9 +56,10 @@ public class Mineria {
      * entrenado
      * @param archivoInstancias nombre del archivo que contiene la instancia a
      * predecir
+     * @return repuesta de prediccion
      * @throws IOException
      */
-    public String predecir(String archivo_modelo, String archivoInstancias) throws IOException {
+    public Resultado predecir(String archivo_modelo, String archivoInstancias) throws IOException {
         ArffLoader arrfloader = new ArffLoader();
         File file;
         file = new File(archivoInstancias);
@@ -65,20 +68,24 @@ public class Mineria {
         Instances instancias = arrfloader.getDataSet();
         Instance instanciaActual = instancias.firstInstance();
         int indiceClase = modelo.getVarClase().index();
-        
+
         NaiveBayesSolitario nv = new NaiveBayesSolitario();
         double[] result = nv.evaluarInstancia(instanciaActual, modelo);
 //        String[] respuestas = new String[result.length];
         int mayor = 0;
-        for (int i = 1; i < result.length; i++) {
+        List<String[]> listaResultados = new ArrayList();
+        for (int i = 0; i < result.length; i++) {
             if (result[mayor] < result[i]) {
                 mayor = i;
             }
+            listaResultados.add(new String[]{instancias.attribute(indiceClase).value(mayor), String.valueOf(result[i])});
         }
-        
-//        System.out.println("instancia: " + instanciaActual.toString());
-//        System.out.println("resultado: " + Arrays.toString(result));
-//        System.out.println("resultado: " + instancias.attribute(indiceClase).value(mayor));
-        return instancias.attribute(indiceClase).value(mayor);
+        System.out.println("instancia: " + instanciaActual.toString());
+        for (int i = 0; i < listaResultados.size(); i++) {
+            System.out.println(listaResultados.get(i)[0] + " : " + listaResultados.get(i)[1]);
+        }
+
+        System.out.println("mayor: " + instancias.attribute(indiceClase).value(mayor));
+        return new Resultado(listaResultados, mayor);
     }
 }
