@@ -5,6 +5,7 @@
  */
 package com.interpro.mineria;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,5 +37,14 @@ public class Resultado {
     public void setIndiceMayor(int indiceMayor) {
         this.indiceMayor = indiceMayor;
     }
-    
+
+    @Override
+    public String toString() {
+        String resultads = "";
+        for (String[] resultado : resultados) {
+            resultads += Arrays.toString(resultado);
+        }
+        return "Resultado{" + "resultados=" + resultads + ", indiceMayor=" + indiceMayor + '}';
+    }
+
 }

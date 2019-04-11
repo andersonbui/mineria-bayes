@@ -16,19 +16,18 @@ import weka.core.Instances;
  * @author debian
  */
 public class NaiveBayesSolitario {
-    
+
     MatProbabilidad[] vectorMatProbCondicionales;
     double[] probVarClase;
     Instances instancias;
     Attribute varClase;
     double[] vectorPrecision;
     private boolean laplace = true;
- 
-    
+
     /**
-     * 
+     *
      * @param instancias descripcion
-     * @return 
+     * @return
      */
     private static double[] calcularPrecision(Instances instancias) {
         double sumaUnos;
@@ -73,6 +72,7 @@ public class NaiveBayesSolitario {
      */
     public Modelo crearModelo(Instances instanciasOriginales) {
         Attribute[] atributos1;
+        Attribute varClase;
         Attribute varClase1;
         double[] probVarClase1;
         MatProbabilidad[] vectorMatProbCondicionales1;
@@ -100,6 +100,7 @@ public class NaiveBayesSolitario {
             }
             // conteo_atributo[i]/total_atributos
             for (int i = 0; i < probVarClase.length; i++) {
+                sumContadores = sumContadores > 0 ? sumContadores : 1;
                 probVarClase[i] /= sumContadores;
             }
 
@@ -145,10 +146,13 @@ public class NaiveBayesSolitario {
                         contador[valPrin][1] += valSeg;
                         vectorSumaValores[valPrin]++;
                     }
+                    double valSuma;
                     // promedio agrupado por atributo principal
                     for (int l = 0; l < vectorSumaValores.length; l++) {
+                        valSuma = vectorSumaValores[l];
+                        valSuma = valSuma > 0 ? valSuma : 1;
                         //promedio
-                        contador[l][1] /= vectorSumaValores[l];
+                        contador[l][1] /= valSuma;
                     }
                     // calculo de desviacion estandar
                     for (int k = 0; k < instancias.numInstances(); k++) {
@@ -159,8 +163,10 @@ public class NaiveBayesSolitario {
                     }
                     //completar calculo de desviacion
                     for (int i = 0; i < vectorSumaValores.length; i++) {
+                        valSuma = vectorSumaValores[i];
+                        valSuma = valSuma > 0 ? valSuma : 1;
                         // raiz del cociente, de la sumatoria entre numero de elementos
-                        contador[i][0] = Math.sqrt(contador[i][0] / (vectorSumaValores[i]));
+                        contador[i][0] = Math.sqrt(contador[i][0] / valSuma);
 //                        System.out.println("[" + varClase.value(i) + "]:" + Util.imprimirVectorDouble(contador[i]));
                     }
                     vectorMatProbCondicionales[j] = new MatProbabilidad(contador, null, atributoActual, varClase);
@@ -172,10 +178,11 @@ public class NaiveBayesSolitario {
         // variables para modelo
         vectorMatProbCondicionales1 = this.vectorMatProbCondicionales;
         vectorPrecision1 = this.vectorPrecision;
-        varClase1 = this.varClase;
+        varClase1 = varClase;
         probVarClase1 = this.probVarClase;
         atributos1 = ontenerAtributos(instancias);
-        return new Modelo(probVarClase1, varClase1, vectorPrecision1, vectorMatProbCondicionales1, atributos1);
+        Modelo modelo = new Modelo(probVarClase1, varClase1, vectorPrecision1, vectorMatProbCondicionales1, atributos1);
+        return modelo;
     }
 
     /**
@@ -258,10 +265,9 @@ public class NaiveBayesSolitario {
      * @param modelo descripcion
      * @return double[atributo]
      */
-    public static double[] evaluarInstancia(Instance instanciaActual, Modelo modelo) {
+    public double[] evaluarInstancia(Instance instanciaActual, Modelo modelo) {
         Attribute[] atributos = modelo.getAtributos();
         Attribute varClase = modelo.getVarClase();
-
         if (varClase == null) {
             throw new RuntimeException("Error, Se debe primero crear el modelo.");
         }
@@ -280,13 +286,14 @@ public class NaiveBayesSolitario {
         }
         return probabilidadesVarClase;
     }
-/**
- * 
- * @param modelo descripcion
- * @param instanciaActual descripcion
- * @param valAttPrincipal descripcion
- * @return  descripcion
- */
+
+    /**
+     *
+     * @param modelo descripcion
+     * @param instanciaActual descripcion
+     * @param valAttPrincipal descripcion
+     * @return descripcion
+     */
     private static double evaluarInstancia(Modelo modelo, Instance instanciaActual, int valAttPrincipal) {
         Attribute[] atributos = modelo.getAtributos();
         Attribute varClase = modelo.getVarClase();
@@ -322,13 +329,14 @@ public class NaiveBayesSolitario {
         }
         return Math.pow(10, probabilidadTotal);
     }
-/**
- * 
- * @param instancias descripcion
- * @param instanciaActual descripcion
- * @param valAttPrincipal descripcion
- * @return  descripcion
- */
+
+    /**
+     *
+     * @param instancias descripcion
+     * @param instanciaActual descripcion
+     * @param valAttPrincipal descripcion
+     * @return descripcion
+     */
     private double evaluarInstancia(Attribute[] instancias, Instance instanciaActual, int valAttPrincipal) {
         double probabilidadTotal = 1;
         for (int j = 0; j < instancias.length; j++) {
@@ -367,7 +375,7 @@ public class NaiveBayesSolitario {
      * @param atributo descripcion
      * @param vectorPrecision descripcion
      * @return descripcion
-     */ 
+     */
     public static double getValor(Instance instancia, Attribute atributo, double[] vectorPrecision) {
         double valor;
         valor = instancia.value(atributo);

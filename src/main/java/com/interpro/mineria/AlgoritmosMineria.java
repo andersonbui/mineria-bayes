@@ -100,7 +100,7 @@ public class AlgoritmosMineria {
         File file;
 //        file = new File("src/"+archivoEntrenamiento);
 //        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
-        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
+        file = new File("areasdeconocimiento-INGENIERIA.arff");
 //        file = new File("src/drug1n.arff");
         ArffLoader arrfloader = new ArffLoader();
         arrfloader.setFile(file);
@@ -110,13 +110,14 @@ public class AlgoritmosMineria {
         instancias.setClass(instancias.attribute("ingenieria"));
         NaiveBayesSolitario nv = new NaiveBayesSolitario();
         Modelo modelo = nv.crearModelo(instancias);
-        almacenamiento.Almacenamiento.guardarObjeto(modelo, "modelo");
+        almacenamiento.Almacenamiento.guardarObjeto(modelo, "modelo", true);
     }
 
     static void probar() throws IOException {
         ArffLoader arrfloader = new ArffLoader();
         File file;
-        file = new File("src/areasdeconocimiento-INGENIERIA.arff");
+        file = new File("areasdeconocimiento-INGENIERIA.arff");
+        file = new File("archivo_instancia.arff");
         arrfloader.setFile(file);
         Modelo modelo = (Modelo) almacenamiento.Almacenamiento.obtenerObjeto("modelo");
         Instances instancias = arrfloader.getDataSet();

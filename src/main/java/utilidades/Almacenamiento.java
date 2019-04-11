@@ -22,13 +22,13 @@ public class Almacenamiento {
      * @param nombre_archivo
      * @return
      */
-    public static boolean guardarObjeto(Object objeto, String nombre_archivo) {
+    public static boolean guardarObjeto(Object objeto, String nombre_archivo, boolean sobreescribir) {
         FileOutputStream fos;
         try {
             File fileUsuario = new File(nombre_archivo);
 
-            if (!fileUsuario.exists()) {
-                fos = new FileOutputStream(fileUsuario, true);
+            if (!fileUsuario.exists() || sobreescribir) {
+                fos = new FileOutputStream(fileUsuario, false);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeUnshared(objeto);
                 fos.close();

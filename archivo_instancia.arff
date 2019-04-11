@@ -1,0 +1,15 @@
+@relation areasdeconocimiento
+
+@attribute sexo {F,M}
+@attribute edad numeric
+@attribute ingenieria {SI,NO}
+@attribute realistic numeric
+@attribute investigativo numeric
+@attribute artistic numeric
+@attribute social numeric
+@attribute emprendedor numeric
+@attribute convencional numeric
+
+@data
+
+F,20,NO,12.5,19.5,16.5,18.5,15.5,16.5
